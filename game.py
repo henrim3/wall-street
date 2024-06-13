@@ -64,7 +64,7 @@ class Game:
 
     def play_golden_opportunity_phase(self):
         print("Golden Opportunity Phase Begins:")
-        # Logic for Golden Opportunity Phase (to be implemented based on your game's rules)
+        # Logic for Golden Opportunity Phase 
 
     def end_game(self):
         print("Game Over. Final Portfolios:")
