@@ -1,0 +1,6 @@
+
+# ignore ALL __pycache__ files that are created when the main game.py file is ran
+
+__pycache__
+
+#
