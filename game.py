@@ -44,21 +44,21 @@ class Game:
 
     def buy_stock_action(self, player):
         self.stock_market.print_market_status()
-        stock_name = input("Enter the name of the stock you want to buy: ")
+        symbol = input("Enter the symbol of the stock you want to buy: ")
         quantity = int(input("Enter the quantity you want to buy: "))
-        if stock_name in self.stock_market.stocks:
-            stock_price = self.stock_market.stocks[stock_name]
-            player.buy_stock(stock_name, quantity, stock_price)
+        if symbol in self.stock_market.stockandsymbols:
+            curstock = self.stock_market.get_stock(symbol)
+            player.buy_stock(curstock, quantity)
         else:
             print("Invalid stock name.")
 
     def sell_stock_action(self, player):
         player.check_portfolio()
-        stock_name = input("Enter the name of the stock you want to sell: ")
+        stock_symbol = input("Enter the symbol of the stock you want to sell: ")
         quantity = int(input("Enter the quantity you want to sell: "))
-        if stock_name in self.stock_market.stocks:
-            stock_price = self.stock_market.stocks[stock_name]
-            player.sell_stock(stock_name, quantity, stock_price)
+        if stock_symbol in self.stock_market.stockandsymbols:
+            curstock = self.stock_market.get_stock(stock_symbol)
+            player.sell_stock(curstock, quantity)
         else:
             print("Invalid stock name.")
 
