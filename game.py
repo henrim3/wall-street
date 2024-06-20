@@ -1,5 +1,15 @@
 from player import Player
 from stock_market import StockMarket
+from user_input import choice_input
+
+TURN_ACTIONS = [
+    "Buy Stock",
+    "Sell Stock",
+    "Check Portfolio",
+    "Allocate to Buyout Fund",
+    "Skip Turn",
+]
+
 
 class Game:
     def __init__(self, num_players):
@@ -26,21 +36,22 @@ class Game:
                 self.player_turn(player)
 
     def player_turn(self, player):
-        print(f"{player.name}'s turn:")
-        print("Actions: 1) Buy Stock  2) Sell Stock  3) Check Portfolio  4) Allocate to Buyout Fund  5) Skip Turn")
-        action = input("Choose an action (1-5): ")
+        print(f"-------------{player.name}'s TURN-------------")
+        action: str = choice_input(
+            TURN_ACTIONS, "Choose an action: ", "Actions")[1]
 
-        if action == "1":
+        if action == "Buy Stock":
             self.buy_stock_action(player)
-        elif action == "2":
+        elif action == "Sell Stock":
             self.sell_stock_action(player)
-        elif action == "3":
+        elif action == "Check Portfolio":
             player.check_portfolio()
-        elif action == "4":
+        elif action == "Allocate to Buyout Fund":
             amount = float(input("Enter amount to allocate to Buyout Fund: "))
             player.allocate_to_buyout_fund(amount)
-        elif action == "5":
+        elif action == "Skip Turn":
             print(f"{player.name} skipped their turn.")
+        print()
 
     def buy_stock_action(self, player):
         self.stock_market.print_market_status()
@@ -64,7 +75,7 @@ class Game:
 
     def play_golden_opportunity_phase(self):
         print("Golden Opportunity Phase Begins:")
-        # Logic for Golden Opportunity Phase 
+        # Logic for Golden Opportunity Phase
 
     def end_game(self):
         print("Game Over. Final Portfolios:")
@@ -77,6 +88,7 @@ class Game:
         self.play_build_phase()
         self.play_golden_opportunity_phase()
         self.end_game()
+
 
 if __name__ == "__main__":
     game = Game(num_players=3)
