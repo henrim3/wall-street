@@ -1,6 +1,5 @@
 from stock_market import StockMarket
 
-
 class Player:
     def __init__(self, name, initial_capital, percentage_stake):
         self.name = name
@@ -32,6 +31,7 @@ class Player:
         print(f"{self.name}'s Portfolio:")
         for stock, quantity in self.portfolio.items():
             print(f"{stock}: {quantity} shares")
+        print(f"Capital: ${self.capital}")
 
     def allocate_to_buyout_fund(self, amount):
         if amount <= self.capital:
@@ -54,6 +54,9 @@ class Player:
         self.capital += total_value
         self.portfolio.clear()
         print(f"{self.name} liquidated their portfolio and received ${total_value}.")
+
+    def check_stake(self):
+        print(f"{self.name} has a {self.percentage_stake}% stake in the firm.")
 
     def __str__(self):
         return f"Player {self.name}: Capital ${self.capital}, Portfolio {self.portfolio}"

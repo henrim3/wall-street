@@ -1,4 +1,7 @@
 class StockMarket:
+    BLUE = "\033[94m"
+    END_COLOR = "\033[0m"
+
     def __init__(self):
         self.stocks = {}  # {stock_name: price}
 
@@ -19,6 +22,6 @@ class StockMarket:
             self.stocks[stock] += change
 
     def print_market_status(self):
-        print("Current Stock Prices:")
+        print(f"{self.BLUE}Current Stock Prices:{self.END_COLOR}")
         for stock, price in self.stocks.items():
-            print(f"{stock}: ${price:.2f}")
+            print(f"{self.BLUE}{stock}: ${price:.2f}{self.END_COLOR}")
