@@ -1,5 +1,16 @@
 from player import Player
 from stock_market import StockMarket
+from user_input import choice_input
+
+TURN_ACTIONS = [
+    "Buy Stock",
+    "Sell Stock",
+    "Check Portfolio",
+    "Allocate to Buyout Fund",
+    "Skip Turn",
+    "Get Stock Info"
+]
+
 
 class Game:
     def __init__(self, num_players):
@@ -26,35 +37,29 @@ class Game:
                 self.player_turn(player)
 
     def player_turn(self, player):
-        print(f"{player.name}'s turn:")
-        print(f"\t Current capital: {player.capital}")
-        print(f"\t Current percentage stake: {player.percentage_stake} \n")
-        action  = 0
-        while action != 6:
-            print("Actions: 1) Buy Stock  2) Sell Stock  3) Get Stock Info 4) Check Portfolio  5) Allocate to Buyout Fund  6) Skip Turn")
-            action = input("\nChoose an action (1-5): ")
-            print("")
-            if action == "1":
-                self.buy_stock_action(player)
-            elif action == "2":
-                self.sell_stock_action(player)
-            elif action == "3":
-                stockname = input("Enter stock tikr:")
-                if(stockname in self.stock_market.stockandtikrs):
-                    stock = self.stock_market.get_stock(stockname)
-                    stock.printinfo()
-                else:
-                    print(f"Stock tikr {stockname} not found")
-            elif action == "4":
-                player.check_portfolio()
-            elif action == "5":
-                amount = float(input("Enter amount to allocate to Buyout Fund: "))
-                player.allocate_to_buyout_fund(amount)
-            elif action == "6":
-                print(f"{player.name} skipped their turn.")
-                break
+        print(f"-------------{player.name}'s TURN-------------")
+        action: str = choice_input(
+            TURN_ACTIONS, "Choose an action: ", "Actions")[1]
+
+        if action == "Buy Stock":
+            self.buy_stock_action(player)
+        elif action == "Sell Stock":
+            self.sell_stock_action(player)
+        elif action == "Check Portfolio":
+            player.check_portfolio()
+        elif action == "Allocate to Buyout Fund":
+            amount = float(input("Enter amount to allocate to Buyout Fund: "))
+            player.allocate_to_buyout_fund(amount)
+        elif action == "Skip Turn":
+            print(f"{player.name} skipped their turn.")
+        elif action == "Get Stock Info":
+            stockname = input("Enter stock tikr:")
+            if(stockname in self.stock_market.stockandtikrs):
+                stock = self.stock_market.get_stock(stockname)
+                stock.printinfo()
             else:
-                print("Invalid command")
+                print(f"Stock tikr {stockname} not found")
+        print()
 
     def buy_stock_action(self, player):
         self.stock_market.print_market_status(False)
@@ -78,7 +83,7 @@ class Game:
 
     def play_golden_opportunity_phase(self):
         print("Golden Opportunity Phase Begins:")
-        # Logic for Golden Opportunity Phase 
+        # Logic for Golden Opportunity Phase
 
     def end_game(self):
         print("Game Over. Final Portfolios:")
@@ -91,6 +96,7 @@ class Game:
         self.play_build_phase()
         self.play_golden_opportunity_phase()
         self.end_game()
+
 
 if __name__ == "__main__":
     game = Game(num_players=3)
