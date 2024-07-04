@@ -5,10 +5,10 @@ from user_input import choice_input
 TURN_ACTIONS = [
     "Buy Stock",
     "Sell Stock",
+    "Get Stock Info",
     "Check Portfolio",
     "Allocate to Buyout Fund",
-    "Skip Turn",
-    "Get Stock Info"
+    "End Turn"
 ]
 
 
@@ -38,27 +38,28 @@ class Game:
 
     def player_turn(self, player):
         print(f"-------------{player.name}'s TURN-------------")
-        action: str = choice_input(
-            TURN_ACTIONS, "Choose an action: ", "Actions")[1]
-
-        if action == "Buy Stock":
-            self.buy_stock_action(player)
-        elif action == "Sell Stock":
-            self.sell_stock_action(player)
-        elif action == "Check Portfolio":
-            player.check_portfolio()
-        elif action == "Allocate to Buyout Fund":
-            amount = float(input("Enter amount to allocate to Buyout Fund: "))
-            player.allocate_to_buyout_fund(amount)
-        elif action == "Skip Turn":
-            print(f"{player.name} skipped their turn.")
-        elif action == "Get Stock Info":
-            stockname = input("Enter stock tikr:")
-            if(stockname in self.stock_market.stockandtikrs):
-                stock = self.stock_market.get_stock(stockname)
-                stock.printinfo()
-            else:
-                print(f"Stock tikr {stockname} not found")
+        while(True):
+            action: str = choice_input(
+                TURN_ACTIONS, "Choose an action: ", "Actions")[1]
+            if action == "Buy Stock":
+                self.buy_stock_action(player)
+            elif action == "Sell Stock":
+                self.sell_stock_action(player)
+            elif action == "Check Portfolio":
+                player.check_portfolio()
+            elif action == "Allocate to Buyout Fund":
+                amount = float(input("Enter amount to allocate to Buyout Fund: "))
+                player.allocate_to_buyout_fund(amount)
+            elif action == "End Turn":
+                print(f"{player.name} completed their turn.")
+                break
+            elif action == "Get Stock Info":
+                stockname = input("Enter stock tikr:")
+                if(stockname in self.stock_market.stockandtikrs):
+                    stock = self.stock_market.get_stock(stockname)
+                    stock.printinfo()
+                else:
+                    print(f"Stock tikr {stockname} not found")
         print()
 
     def buy_stock_action(self, player):
