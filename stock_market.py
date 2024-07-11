@@ -8,10 +8,10 @@ marketsize = 20
 class StockMarket:
     def __init__(self):
         self.stocks = []  # {stock_name: price}
-        self.stockandtikrs = {}
+        self.stockandtickers = {}
 
     def initialize_stocks(self):
-        addStocks(self.stocks, self.stockandtikrs, stockfile, marketsize)
+        addStocks(self.stocks, self.stockandtickers, stockfile, marketsize)
 
     def fluctuate_market(self):
         for stock in self.stocks:
@@ -24,8 +24,8 @@ class StockMarket:
         else:
             print("Current Stock Prices:")
         for stock in self.stocks:
-            print(f"{stock.tikr}: {stock.name}, ${stock.price:.2f}")
+            print(f"{stock.ticker}: {stock.name}, ${stock.price:.2f}")
         print("")
 
-    def get_stock(self, tikr):
-        return self.stockandtikrs[tikr]
+    def get_stock(self, ticker):
+        return self.stockandtickers[ticker]

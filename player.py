@@ -21,11 +21,11 @@ class Player:
             stock.owned += quantity
             self.transactions.append((stock, quantity, total_cost))
             self.capital = round(float(self.capital), 2)
-            print(f"\n{self.name} bought {quantity} shares of {stock.tikr}: {stock.name} at ${stock.price:.2f} each. \n")
+            print(f"\n{self.name} bought {quantity} shares of {stock.ticker}: {stock.name} at ${stock.price:.2f} each. \n")
         else:
             print(f"\n{self.name} does not have enough capital to buy {quantity} shares of {stock.name}. \n")
 
-    def sell_stock(self, stock, quantity):
+    def sell_stock(self, stock: Stock, quantity):
         if stock in self.portfolio and self.portfolio[stock] >= quantity:
             total_cost = quantity * stock.price
             self.portfolio[stock] -= quantity
@@ -39,7 +39,7 @@ class Player:
         print(f"{self.name}'s Portfolio:")
         print(f"${self.capital}, {self.percentage_stake}% percentage stake")
         for stock, quantity in self.portfolio.items():
-            print(f"{stock.tikr}: {stock.name}: {quantity} shares, worth {(quantity * stock.price):.2f}")
+            print(f"{stock.ticker}: {stock.name}: {quantity} shares, worth {(quantity * stock.price):.2f}")
 
     def check_transactions(self):
         print(f"{self.name}'s Transactions:")
@@ -48,7 +48,7 @@ class Player:
             if (isinstance(asset, str)):
                 print(f"{asset}: ${price}")
             else:
-                print(f"{asset.tikr}: {quantity}, ${price}")
+                print(f"{asset.ticker}: {quantity}, ${price}")
 
     def allocate_to_buyout_fund(self, amount):
         if amount <= self.capital:
@@ -60,7 +60,7 @@ class Player:
             print(f"{self.name} does not have enough capital to allocate ${amount} to the Buyout Fund. \n")
             return 0
 
-    def receive_dividend(self, stock, dividend_amount):
+    def receive_dividend(self, stock, dividend_amount)-> None:
         if stock in self.portfolio:
             self.capital += dividend_amount
             print(f"{self.name} received a dividend of ${dividend_amount} for {stock.name}. \n")

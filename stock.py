@@ -2,20 +2,20 @@ import random
 import numpy as np # type: ignore
 
 class Stock:
-    def __init__(self, name="", tikr="", price=0, risklvl=0, potreturn=0, marketinf=0, mu=0.1, sigma=0.2, dt=1/252):
+    def __init__(self, name="", ticker="", price=0, risklvl=0, potreturn=0, marketinf=0, marketcap = 0.01, needed = 10000,  mu=0.1, sigma=0.2, dt=1/252):
         self.name = name
-        self.tikr = tikr
+        self.ticker = ticker
         self.price = price
         self.risklvl = risklvl
         self.potreturn = potreturn
         self.marketinf = marketinf
-        self.change = '\0'
+        self.change = None
         self.mu = mu        # Drift coefficient
         self.sigma = sigma  # Volatility coefficient
         self.dt = dt        # Time increment
         self.owned = 0
-        self.needed = 1000
-        self.marketcap = 0.01
+        self.needed = needed
+        self.marketcap = marketcap
     
     def fluctuate(self):
         tmp = self.price
@@ -28,7 +28,7 @@ class Stock:
     
     def printinfo(self):
         print(f"\nName: {self.name}")
-        print(f"Tikr: {self.tikr}")
+        print(f"Ticker: {self.ticker}")
         print(f"Price: {self.price:.2f}")
         print(f"Change:{self.change:.2f}")
         print(f"Current shares owned: {self.owned}")
