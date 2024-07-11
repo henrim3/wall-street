@@ -24,4 +24,5 @@ class StockMarket:
     def print_market_status(self):
         print(f"{self.BLUE}Current Stock Prices:{self.END_COLOR}")
         for stock, price in self.stocks.items():
-            print(f"{self.BLUE}{stock}: ${price:.2f}{self.END_COLOR}")
+            print(f"{stock}: ${price:.2f}")
+        print()

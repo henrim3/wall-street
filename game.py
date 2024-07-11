@@ -1,5 +1,15 @@
 from player import Player
 from stock_market import StockMarket
+from user_input import choice_input
+
+TURN_ACTIONS = [
+    "Buy Stock",
+    "Sell Stock",
+    "Check Portfolio",
+    "Allocate to Buyout Fund",
+    "Skip Turn",
+]
+
 
 class Game:
     RETRO_GREEN = "\033[92m"
@@ -65,27 +75,22 @@ class Game:
                 print(f"{self.RETRO_GREEN}--------------------{self.END_COLOR}\n")
 
     def player_turn(self, player):
-        while True:
-            print(f"\n{self.RETRO_GREEN}{player.name}'s turn:{self.END_COLOR}")
-            print("Actions: 1) Buy Stock  2) Sell Stock  3) Check Portfolio  4) Allocate to Buyout Fund  5) Check Stake  6) Skip Turn")
-            action = input("Choose an action (1-6): ")
+        print(f"-------------{player.name}'s TURN-------------")
+        action: str = choice_input(
+            TURN_ACTIONS, "Choose an action: ", "Actions")[1]
 
-            if action == "1":
-                if self.buy_stock_action(player):
-                    break
-            elif action == "2":
-                if self.sell_stock_action(player):
-                    break
-            elif action == "3":
-                player.check_portfolio()
-            elif action == "4":
-                amount = float(input("Enter amount to allocate to Buyout Fund: "))
-                player.allocate_to_buyout_fund(amount)
-            elif action == "5":
-                player.check_stake()
-            elif action == "6":
-                print(f"{self.RETRO_GREEN}{player.name} skipped their turn.{self.END_COLOR}")
-                break
+        if action == "Buy Stock":
+            self.buy_stock_action(player)
+        elif action == "Sell Stock":
+            self.sell_stock_action(player)
+        elif action == "Check Portfolio":
+            player.check_portfolio()
+        elif action == "Allocate to Buyout Fund":
+            amount = float(input("Enter amount to allocate to Buyout Fund: "))
+            player.allocate_to_buyout_fund(amount)
+        elif action == "Skip Turn":
+            print(f"{player.name} skipped their turn.")
+        print()
 
     def buy_stock_action(self, player):
         self.stock_market.print_market_status()
@@ -110,8 +115,8 @@ class Game:
         return True
 
     def play_golden_opportunity_phase(self):
-        print(f"{self.RETRO_GREEN}Golden Opportunity Phase Begins:{self.END_COLOR}")
-        # Logic for Golden Opportunity Phase 
+        print("Golden Opportunity Phase Begins:")
+        # Logic for Golden Opportunity Phase
 
     def end_game(self):
         print(f"{self.RETRO_GREEN}Game Over. Final Portfolios:{self.END_COLOR}")
@@ -124,6 +129,7 @@ class Game:
         self.play_build_phase()
         self.play_golden_opportunity_phase()
         self.end_game()
+
 
 if __name__ == "__main__":
     game = Game(num_players=3)
