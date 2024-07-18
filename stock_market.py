@@ -22,3 +22,4 @@ class StockMarket:
         print("Current Stock Prices:")
         for stock, price in self.stocks.items():
             print(f"{stock}: ${price:.2f}")
+        print()
