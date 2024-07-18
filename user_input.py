@@ -35,7 +35,7 @@ def choice_input(options: list[str], prompt: str, title: str = None) -> int:
             else:
                 print(f"Error: Input must be between 1 and {len(options)}")
         except ValueError:
-            print("Error: Input must be a number")
+            print("Error: Input must be a number.")
 
         print()
 
