@@ -75,6 +75,6 @@ class Player:
         self.portfolio.clear()
         self.transactions.append(("Liquidated", stockcount, total_value))
         print(f"{self.name} liquidated their portfolio and received ${total_value:.2f}. \n")
-        
+
     def __str__(self):
         return f"Player {self.name}: Capital ${self.capital}, Portfolio {self.portfolio}"
