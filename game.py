@@ -5,9 +5,10 @@ from user_input import choice_input
 TURN_ACTIONS = [
     "Buy Stock",
     "Sell Stock",
+    "Get Stock Info",
     "Check Portfolio",
     "Allocate to Buyout Fund",
-    "Skip Turn",
+    "End Turn"
 ]
 
 
@@ -56,7 +57,7 @@ class Game:
     def initialize_game(self):
         self.print_title()
         self.stock_market.initialize_stocks()
-        self.stock_market.print_market_status()
+        self.stock_market.print_market_status(True)
         self.players = [
             Player("Player 1", 1000.0, 33.33),
             Player("Player 2", 1000.0, 33.33),
@@ -64,11 +65,11 @@ class Game:
         ]
 
     def play_build_phase(self):
-        print(f"{self.RETRO_GREEN}Build Phase Begins:{self.END_COLOR}")
+        print("Build Phase Begins:\n")
         for turn in range(3):
-            print(f"\n{self.RETRO_GREEN}=== Turn {turn + 1} ==={self.END_COLOR}")
+            print(f"Turn {turn + 1}:\n")
             self.stock_market.fluctuate_market()
-            self.stock_market.print_market_status()
+            self.stock_market.print_market_status(False)
             for player in self.players:
                 print(f"\n{self.RETRO_GREEN}--------------------{self.END_COLOR}")
                 self.player_turn(player)
@@ -76,43 +77,56 @@ class Game:
 
     def player_turn(self, player):
         print(f"-------------{player.name}'s TURN-------------")
-        action: str = choice_input(
-            TURN_ACTIONS, "Choose an action: ", "Actions")[1]
-
-        if action == "Buy Stock":
-            self.buy_stock_action(player)
-        elif action == "Sell Stock":
-            self.sell_stock_action(player)
-        elif action == "Check Portfolio":
-            player.check_portfolio()
-        elif action == "Allocate to Buyout Fund":
-            amount = float(input("Enter amount to allocate to Buyout Fund: "))
-            player.allocate_to_buyout_fund(amount)
-        elif action == "Skip Turn":
-            print(f"{player.name} skipped their turn.")
+        while(True):
+            action: str = choice_input(
+                TURN_ACTIONS, "Choose an action: ", "Actions")[1]
+            if action == "Buy Stock":
+                self.buy_stock_action(player)
+            elif action == "Sell Stock":
+                self.sell_stock_action(player)
+            elif action == "Check Portfolio":
+                player.check_portfolio()
+            elif action == "Allocate to Buyout Fund":
+                inp = input("Enter amount to allocate to Buyout Fund: ")
+                if inp.isdigit():
+                    amount = int(inp)
+                    player.allocate_to_buyout_fund(amount)
+                else:
+                    print("Error: Invalid amount.")
+            elif action == "End Turn":
+                print(f"{player.name} completed their turn.")
+                break
+            elif action == "Get Stock Info":
+                stockname = input("Enter stock ticker:")
+                if(stockname in self.stock_market.stockandtickers):
+                    stock = self.stock_market.get_stock(stockname)
+                    stock.printinfo()
+                else:
+                    print(f"Error: Stock ticker {stockname} not found")
         print()
 
     def buy_stock_action(self, player):
-        self.stock_market.print_market_status()
-        stock_name = input("Enter the name of the stock you want to buy: ")
-        if stock_name not in self.stock_market.stocks:
-            print(f"{self.RETRO_GREEN}Invalid stock name. Please try again.{self.END_COLOR}")
-            return False
-        quantity = int(input("Enter the quantity you want to buy: "))
-        stock_price = self.stock_market.stocks[stock_name]
-        player.buy_stock(stock_name, quantity, stock_price)
-        return True
+        self.stock_market.print_market_status(False)
+        ticker = input("Enter the ticker of the stock you want to buy: ")
+        inp = input("Enter the quantity you want to buy: ")
+        if ticker in self.stock_market.stockandtickers and inp.isdigit():
+            quantity = int(inp)
+            curstock = self.stock_market.get_stock(ticker)
+            player.buy_stock(curstock, quantity)
+        else:
+            print("Error: Invalid input.")
 
     def sell_stock_action(self, player):
         player.check_portfolio()
-        stock_name = input("Enter the name of the stock you want to sell: ")
-        if stock_name not in self.stock_market.stocks:
-            print(f"{self.RETRO_GREEN}Invalid stock name. Please try again.{self.END_COLOR}")
-            return False
-        quantity = int(input("Enter the quantity you want to sell: "))
-        stock_price = self.stock_market.stocks[stock_name]
-        player.sell_stock(stock_name, quantity, stock_price)
-        return True
+        stock_ticker = input("Enter the ticker of the stock you want to sell: ")
+        inp = input("Enter the quantity you want to sell: ")
+        if stock_ticker in self.stock_market.stockandtickers and inp.isdigit():
+            quantity = int(inp)
+            curstock = self.stock_market.get_stock(stock_ticker)
+            player.sell_stock(curstock, quantity)
+        else:
+            print("Error: Invalid input.")
+            
 
     def play_golden_opportunity_phase(self):
         print("Golden Opportunity Phase Begins:")
