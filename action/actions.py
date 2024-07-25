@@ -46,7 +46,15 @@ class CheckPortfolio(Action):
         self.player: Player = player
         self.stock_market : StockMarket = stock_market
     def run(self) -> None:
-        self.player.check_portfolio(self.stock_market)
+        self.player.check_portfolio()
+        
+class CheckBalance(Action):
+    def __init__(self, player: Player) -> None:
+        self.name: str = "Check Balance"
+        self.player: Player = player
+
+    def run(self) -> None:
+        print(f"{self.player.name}'s Current Balance: ${self.player.capital:.2f}")
 
 
 class SellStock(Action):
