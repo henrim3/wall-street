@@ -1,6 +1,7 @@
 from player import Player
 from stock_market import StockMarket
 from user_input import choice_input
+from player import RealPlayer
 
 TURN_ACTIONS = [
     "Buy Stock",
@@ -59,9 +60,9 @@ class Game:
         self.stock_market.initialize_stocks()
         self.stock_market.print_market_status(True)
         self.players = [
-            Player("Player 1", 1000.0, 33.33),
-            Player("Player 2", 1000.0, 33.33),
-            Player("Player 3", 1000.0, 33.33),
+            RealPlayer("Player 1", 1000.0, 33.33),
+            RealPlayer("Player 2", 1000.0, 33.33),
+            RealPlayer("Player 3", 1000.0, 33.33),
         ]
 
     def play_build_phase(self):
