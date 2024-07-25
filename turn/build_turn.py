@@ -14,6 +14,10 @@ class BuildTurn(Turn):
         self.stock_market: StockMarket = stock_market
 
     def run(self) -> None:
+        
+        
+        
+        self.stock_market.fluctuate_market()
         for team in self.teams:
             for player in team.players:
                 actions: list[Action] = [
