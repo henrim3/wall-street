@@ -33,8 +33,8 @@ def addStocks(stocks, stockandtikrs, filename, marketsize):
     if marketsize % 2 == 1:
         remaining += 1
     spennies = (random.sample(pennies, remaining))
-    spennies.sort(key=lambda stock: stock.name)
-    sbluechips.sort(key=lambda stock: stock.name)
+    spennies.sort(key=lambda stock: stock.ticker)
+    sbluechips.sort(key=lambda stock: stock.ticker)
     stocks.clear()
     stocks.extend(spennies)
     stocks.extend(sbluechips)
