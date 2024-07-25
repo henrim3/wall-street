@@ -1,7 +1,6 @@
 from stock_market import StockMarket
 from stock import Stock
 
-
 class Player:
     def __init__(self, name, initial_capital, percentage_stake):
         self.name = name
@@ -75,6 +74,9 @@ class Player:
         self.portfolio.clear()
         self.transactions.append(("Liquidated", stockcount, total_value))
         print(f"{self.name} liquidated their portfolio and received ${total_value:.2f}. \n")
-        
+
+    def check_stake(self):
+        print(f"{self.name} has a {self.percentage_stake}% stake in the firm.")
+
     def __str__(self):
         return f"Player {self.name}: Capital ${self.capital}, Portfolio {self.portfolio}"

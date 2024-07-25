@@ -1,6 +1,6 @@
-import csv
 import random
 from stock import Stock
+
 
 def addStocks(stocks, stockandtikrs, filename, marketsize):
     file1 = open(filename, 'r')
