@@ -10,6 +10,8 @@ def addStocks(stocks, stockandtikrs, filename, marketsize):
         info = line.split(',')
         price = info[2][1:]
         price = round(float(price), 2)
+        if len(info[1]) > 60:
+            continue
         if (price > 50 and price < 100) or (price > 1 and price < 5):
             marketcap = 0.01
             risklvl = 1

@@ -22,20 +22,47 @@ class StockMarket:
 
     def print_market_status(self, initial, indent: int = 2):
         indent_str = " " * indent
+        width = 130
+        headers = ["Price ", "Daily Change", " Total Change"]
+        formatted_headers = str(headers[0]) + f"|{headers[1].center(14)}|" + f"{headers[2].center(14)}"
         if (initial):
             print("Initial Stock Prices:")
         else:
-            print("Current Stock Prices:")
+            s = (f"Current Stock Prices:")
+            padding = width - len(s) - len(formatted_headers)
+            pad = " "*padding
+            print(f"{s}{pad}{formatted_headers}")
         reachedblue = False
         reachedpenny = False
         for stock in self.stocks:
             if not stock.isbluechip and not reachedpenny:
-                print(f"{indent_str}Penny Stocks:")
+                headers = [" ", " ", " "]
+                formatted_headers = str(headers[0]) + f"|{headers[1].center(14)}|" + f"{headers[2].center(14)}"
+                s = (f"{indent_str}Penny Stocks:")
+                padding = width - len(s) - len(formatted_headers)
+                pad = " "*padding
+                print(f"{s}{pad}{formatted_headers}")
                 reachedpenny = True
             elif stock.isbluechip and not reachedblue:
-                print(f"{indent_str}Blue Chip Stocks:")
+                headers = [" ", " ", " "]
+                formatted_headers = str(headers[0]) + f"|{headers[1].center(14)}|" + f"{headers[2].center(14)}"
+                s = (f"{indent_str}Blue Chip Stocks:")
+                padding = width - len(s) - len(formatted_headers)
+                pad = " "*padding
+                print(f"{s}{pad}{formatted_headers}")
                 reachedblue = True
-            print(f"{indent_str}{indent_str}{stock.ticker}: {stock.name}, ${stock.price:.2f}")
+            change = f"{stock.change:.2f}%"
+            totchange = f"{stock.totchange:.2f}%"
+            if stock.change > 0:
+                change = f"+{stock.change:.2f}%"
+            if stock.totchange > 0:
+                totchange = f"+{stock.totchange:.2f}%"
+            s = (f"{indent_str}{indent_str}{stock.ticker}: {stock.name}")
+            headers = [f"${stock.price:.2f} ", change, totchange]
+            formatted_headers = str(headers[0]) + f"|{headers[1].center(14)}|" + f" {headers[2].ljust(13)}"
+            padding = width - len(s) - len(formatted_headers)
+            pad = " "*padding
+            print(f"{s}{pad}{formatted_headers}")    
         print("")
 
     def get_stock(self, ticker):

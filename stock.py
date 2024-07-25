@@ -10,8 +10,8 @@ class Stock:
         self.potreturn = potreturn
         self.marketinf = marketinf
         self.start = price
-        self.totchange = None
-        self.change = None
+        self.totchange = 0
+        self.change = 0
         self.mu = mu        # Drift coefficient
         self.sigma = sigma  # Volatility coefficient
         self.dt = dt        # Time increment
@@ -40,6 +40,7 @@ class Stock:
         self.change = self.price - tmp
         self.price = self.price * np.exp((self.mu - 0.5 * self.sigma**2) * self.dt + self.sigma * np.sqrt(self.dt) * W)
         self.change = ((self.price - tmp)/tmp) * 100
+        self.totchange = ((self.price - self.start)/self.start) * 100
         self.price = round(float(self.price), 2)
         print(f"Stock {self.ticker} fluctuated from {tmp:.2f} to {self.price:.2f}")
 
