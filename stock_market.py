@@ -7,7 +7,7 @@ marketsize = 20
 
 class StockMarket:
     def __init__(self):
-        self.stocks = []  # {stock_name: price}
+        self.stocks: list[Stock] = []
         self.stockandtickers = {}
 
     def initialize_stocks(self):
@@ -17,9 +17,8 @@ class StockMarket:
         for stock in self.stocks:
             stock.fluctuate()
 
-
     def print_market_status(self, initial):
-        if(initial):
+        if (initial):
             print("Initial Stock Prices:")
         else:
             print("Current Stock Prices:")
@@ -28,4 +27,6 @@ class StockMarket:
         print("")
 
     def get_stock(self, ticker):
-        return self.stockandtickers[ticker]
+        if (ticker in self.stockandtickers.keys()):
+            return self.stockandtickers[ticker]
+        return None
