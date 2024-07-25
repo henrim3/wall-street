@@ -30,6 +30,5 @@ class StockMarket:
         print("")
 
     def get_stock(self, ticker):
-        if (ticker in self.stockandtickers.keys()):
-            return self.stockandtickers[ticker]
-        return None
+        return self.stockandtickers.get(ticker)
+        

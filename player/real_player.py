@@ -12,11 +12,13 @@ class RealPlayer(Player):
         self.portfolio: dict[str, int] = {}  # {stock: quantity}
         self.transactions: list = []
 
-    def check_portfolio(self):
+    def check_portfolio(self, stock_market: StockMarket):
         print(f"{self.name}'s Portfolio:")
+        total = 0
         for stock, quantity in self.portfolio.items():
             print(f"{stock}: {quantity} shares")
-        print()
+            total += stock_market.get_stock(stock).price * quantity
+        print(f"Total portfolio value: ${total:.2f}")
 
     def choose_action(self, actions: list[Action], indent: int = 0) -> Action:
         indent_str: str = " " * indent
@@ -59,10 +61,12 @@ class RealPlayer(Player):
 
             quantity: int
             while True:
+                maxamt = int(self.capital // stock.price)
                 try:
                     quantity = int(
-                        input("Enter the quantity you want to buy: "))
-                except TypeError:
+                        input(f"Enter the quantity you want to buy (up to {maxamt}): "))
+                except ValueError:
+                    print("Quantity shoud be a number.")
                     continue
 
                 if quantity < 1:
@@ -80,7 +84,7 @@ class RealPlayer(Player):
             return stock_name, quantity
 
     def choose_sell_stock(self, stock_market: StockMarket) -> tuple[str, int]:
-        self.check_portfolio()
+        self.check_portfolio(stock_market)
 
         while True:
             stock_name: str = input(
@@ -91,13 +95,17 @@ class RealPlayer(Player):
                 print("Invalid stock name.")
                 continue
 
-            quantity_available = self.portfolio[stock_name]
+            quantity_available = self.portfolio.get(stock_name)
 
             quantity: int
+            
+            if quantity_available is None:
+                print(f"No shares of {stock_name} available to sell.")
+                continue
             while True:
                 try:
                     quantity = int(
-                        input("Enter the quantity you want to sell: "))
+                        input(f"Enter the quantity you want to sell (up to {quantity_available}): "))
                 except TypeError:
                     continue
 

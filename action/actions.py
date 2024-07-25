@@ -41,13 +41,12 @@ class BuyStock(Action):
 
 
 class CheckPortfolio(Action):
-    def __init__(self, player: Player) -> None:
+    def __init__(self, player: Player, stock_market: StockMarket) -> None:
         self.name: str = "Check Portfolio"
-
         self.player: Player = player
-
+        self.stock_market : StockMarket = stock_market
     def run(self) -> None:
-        self.player.check_portfolio()
+        self.player.check_portfolio(self.stock_market)
 
 
 class SellStock(Action):

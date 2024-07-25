@@ -19,7 +19,7 @@ class BuildTurn(Turn):
                 actions: list[Action] = [
                     BuyStock(player, self.stock_market),
                     SellStock(player, self.stock_market),
-                    CheckPortfolio(player),
+                    CheckPortfolio(player, self.stock_market),
                     AllocateToBuyoutFund(),
                     EndTurn(),
                 ]
