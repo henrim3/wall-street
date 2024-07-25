@@ -2,7 +2,7 @@ import random
 from stock import Stock
 
 
-def addStocks(stocks, stockandtikrs, filename, marketsize):
+def addStocks(stocks, stockandtikrs, filename, marketsize): 
     file1 = open(filename, 'r')
     bluechips = []
     pennies = []
@@ -19,21 +19,22 @@ def addStocks(stocks, stockandtikrs, filename, marketsize):
                 needed = 2000
                 mu = 0.07
                 sigma = 0.15
-                tmp = Stock(info[1],info[0],price,risklvl,potreturn, marketinf, marketcap, needed, mu, sigma)
+                tmp = Stock(info[1],info[0],True,price,risklvl,potreturn, marketinf, marketcap, needed, mu, sigma)
                 bluechips.append(tmp)
             else:
                 needed = 10000
                 mu = 0.15
                 sigma = 0.6
-                tmp = Stock(info[1],info[0],price,risklvl,potreturn, marketinf, marketcap, needed, mu, sigma)
+                tmp = Stock(info[1],info[0],False,price,risklvl,potreturn, marketinf, marketcap, needed, mu, sigma)
                 pennies.append(tmp)
             stockandtikrs[info[0]] = tmp
-    sbluechips = random.sample(bluechips, marketsize//2)
+    sbluechips = (random.sample(bluechips, marketsize//2))
     remaining = marketsize//2
     if marketsize % 2 == 1:
         remaining += 1
-    spennies = random.sample(pennies, remaining)
+    spennies = (random.sample(pennies, remaining))
+    spennies.sort(key=lambda stock: stock.name)
+    sbluechips.sort(key=lambda stock: stock.name)
     stocks.clear()
-    stocks.extend(sbluechips)
     stocks.extend(spennies)
-    random.shuffle(stocks)
+    stocks.extend(sbluechips)

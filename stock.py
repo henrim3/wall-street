@@ -1,9 +1,10 @@
 import numpy as np
 
 class Stock:
-    def __init__(self, name="", ticker="", price=0, risklvl=0, potreturn=0, marketinf=0, marketcap=0.01, needed=10000, mu=0.1, sigma=0.2, dt=5/252):
+    def __init__(self, name="", ticker="", isbluechip= False, price=0, risklvl=0, potreturn=0, marketinf=0, marketcap=0.01, needed=10000, mu=0.1, sigma=0.2, dt=5/252):
         self.name = name
         self.ticker = ticker
+        self.isbluechip = isbluechip
         self.price = price
         self.risklvl = risklvl
         self.potreturn = potreturn

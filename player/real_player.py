@@ -12,12 +12,33 @@ class RealPlayer(Player):
         self.portfolio: dict[str, int] = {}  # {stock: quantity}
         self.transactions: list = []
 
-    def check_portfolio(self, stock_market: StockMarket):
+    def check_portfolio(self, stock_market: StockMarket, indent = 2):
         print(f"{self.name}'s Portfolio:")
+        indentstr = " " * indent
         total = 0
-        for stock, quantity in self.portfolio.items():
-            print(f"{stock}: {quantity} shares")
-            total += stock_market.get_stock(stock).price * quantity
+        reachedblue = False
+        reachedpenny = False
+        pennies = []
+        blue = []
+        for stock in self.portfolio.keys():
+            stockobj = stock_market.get_stock(stock)
+            total += stockobj.price * self.portfolio[stock]
+            if stockobj.isbluechip:
+                blue.append(stock)
+            else:
+                pennies.append(stock)
+        pennies.sort()
+        blue.sort()
+        for stock in pennies:
+            if not reachedpenny:
+                print(f"{indentstr}Owned Penny Stocks:")
+                reachedpenny = True
+            print(f"{indentstr}{indentstr}{stock}: {self.portfolio[stock]} shares")
+        for stock in blue:
+            if not reachedblue:
+                print(f"{indentstr}Owned Blue Chip Stocks:")
+                reachedblue = True
+            print(f"{indentstr}{indentstr}{stock}: {self.portfolio[stock]} shares")
         print(f"Total portfolio value: ${total:.2f}")
 
     def choose_action(self, actions: list[Action], indent: int = 0) -> Action:
