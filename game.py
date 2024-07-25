@@ -8,6 +8,7 @@ TURN_ACTIONS = [
     "Get Stock Info",
     "Check Portfolio",
     "Allocate to Buyout Fund",
+    "Check Balance"
     "End Turn"
 ]
 
@@ -87,6 +88,8 @@ class Game:
                 self.sell_stock_action(player)
             elif action == "Check Portfolio":
                 player.check_portfolio()
+            elif action == "Check Balance":
+                player.check_balance()
             elif action == "Allocate to Buyout Fund":
                 inp = input(f"Enter amount to allocate to Buyout Fund (up to ${player.capital:.2f}): ")
                 try:
