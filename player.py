@@ -33,6 +33,9 @@ class Player:
             print(f"\n{self.name} sold {quantity} shares of {stock.name} at ${stock.price:.2f} each.\n")
         else:
             print(f"\n{self.name} does not have {quantity} shares of {stock.name} to sell.\n")
+            
+    def check_balance(self):
+        print(f"{self.name}'s current balance is: ${self.capital:.2f}")
 
     def check_portfolio(self):
         print(f"{self.name}'s Portfolio:")
