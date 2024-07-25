@@ -1,7 +1,7 @@
 from turn.turn import Turn
 from action import Action
 from action.actions import AllocateToBuyoutFund, BuyStock, CheckPortfolio, \
-    SellStock, EndTurn, CheckBalance
+    SellStock, EndTurn
 from team import Team
 from stock_market import StockMarket
 
@@ -21,7 +21,6 @@ class BuildTurn(Turn):
                     SellStock(player, self.stock_market),
                     CheckPortfolio(player),
                     AllocateToBuyoutFund(),
-                    CheckBalance(player),
                     EndTurn(),
                 ]
 
