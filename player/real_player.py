@@ -137,3 +137,14 @@ class RealPlayer(Player):
                 break
 
             return stock_name, quantity
+
+    def choose_get_info(self, stock_market: StockMarket) -> str:
+        stock_market.print_market_status(False)
+        while True:
+            stock_name: str = input(
+                "Enter the name of the stock you want to get information on: ")
+            stock: Stock = stock_market.get_stock(stock_name)
+            if stock is None:
+                print("Invalid stock name.")
+                continue
+            return stock

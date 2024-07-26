@@ -1,7 +1,7 @@
 import numpy as np
 
 class Stock:
-    def __init__(self, name="", ticker="", isbluechip= False, price=0, risklvl=0, potreturn=0, marketinf=0, marketcap=0.01, needed=10000, mu=0.1, sigma=0.2, dt=5/252):
+    def __init__(self, name="", ticker="", isbluechip= False, price=0, risklvl=0, potreturn=0, marketinf=0, stockrep=0.01, shares=10000, mu=0.1, sigma=0.2, dt=5/252):
         self.name = name
         self.ticker = ticker
         self.isbluechip = isbluechip
@@ -16,8 +16,9 @@ class Stock:
         self.sigma = sigma  # Volatility coefficient
         self.dt = dt        # Time increment
         self.owned = 0
-        self.needed = needed
-        self.marketcap = marketcap
+        self.shares = shares    #shares available 
+        self.needed = shares //2 + shares %2  #shares needed for stock to be under a players management 
+        self.stockrep = stockrep      #The proportion of the total market that the stock represents 0.06 -> 6%
         self.is_recession = True  # Default condition
 
     def fluctuate(self):
@@ -48,11 +49,11 @@ class Stock:
         print(f"\nName: {self.name}")
         print(f"Ticker: {self.ticker}")
         print(f"Price: {self.price:.2f}")
-        print(f"Daily change: {self.change:.2f}%")
-        print(f"Total net change: {self.totchange:.2f}%")
-        print(f"Current shares owned: {self.owned}")
-        print(f"Shares needed: {self.needed}")
-        print(f"Market cap: {self.marketcap} \n")
+        print(f"Daily Change: {self.change:.2f}%")
+        print(f"Total Net Change: {self.totchange:.2f}%")
+        print(f"Current Shares Owned: {self.owned}")
+        print(f"Market Capitalization: {int(self.shares)}")
+        print(f"Stock Representation: {round(self.stockrep * 100,2) }%")
 
     def set_market_condition(self, condition: str):
         """ Set the market condition.

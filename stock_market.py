@@ -3,6 +3,7 @@ from stockparser import addStocks
 
 stockfile = "data/NASDAQ.txt"
 marketsize = 20
+marketshares = 100000
 
 
 class StockMarket:
@@ -14,7 +15,7 @@ class StockMarket:
         self.stockandtickers = {}
 
     def initialize_stocks(self):
-        addStocks(self.stocks, self.stockandtickers, stockfile, marketsize)
+        addStocks(self.stocks, self.stockandtickers, stockfile, marketsize, marketshares)
 
     def fluctuate_market(self):
         for stock in self.stocks:
@@ -65,6 +66,6 @@ class StockMarket:
             print(f"{s}{pad}{formatted_headers}")    
         print("")
 
-    def get_stock(self, ticker):
+    def get_stock(self, ticker)-> Stock: 
         return self.stockandtickers.get(ticker)
         
