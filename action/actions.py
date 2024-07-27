@@ -19,10 +19,10 @@ class BuyStock(Action):
         self.stock_market: StockMarket = stock_market
 
     def run(self) -> None:
-        stock_name, quantity = self.player.choose_buy_stock(self.stock_market)
+        stock_ticker, quantity = self.player.choose_buy_stock(self.stock_market)
 
         # decrease player capital
-        stock: Stock = self.stock_market.get_stock(stock_name)
+        stock: Stock = self.stock_market.get_stock(stock_ticker)
         assert stock is not None
         total_price: int = stock.price * quantity
         assert self.player.capital >= total_price
@@ -31,13 +31,13 @@ class BuyStock(Action):
         portfolio: dict = self.player.portfolio
 
         # add stock to portfolio if doesn't already exist
-        if stock_name not in portfolio.keys():
-            portfolio[stock_name] = 0
+        if stock_ticker not in portfolio.keys():
+            portfolio[stock_ticker] = 0
 
         # add stock to portfolio
-        portfolio[stock_name] += quantity
+        portfolio[stock_ticker] += quantity
 
-        print(f"Bought {quantity} shares of {stock_name}")
+        print(f"Bought {quantity} shares of {stock_ticker}")
 
 
 class CheckPortfolio(Action):

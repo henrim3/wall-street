@@ -30,3 +30,6 @@ class StockMarket:
         if (ticker in self.stockandtickers.keys()):
             return self.stockandtickers[ticker]
         return None
+
+    def get_stocks(self):
+        return self.stockandtickers
