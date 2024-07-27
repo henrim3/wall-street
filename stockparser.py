@@ -1,5 +1,6 @@
 import random
 from stock import Stock
+
 bcproportion = 0.6     #the proportion blue chip stocks should have in the market... 0.6 = 60% 
 penproportion = 0.4     #the proportion penny stocks should have in the market... 0.4 = 40% 
 
