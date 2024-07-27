@@ -9,7 +9,7 @@ class Player:
         self.percentage_stake: int = percentage_stake
         self.portfolio: dict = {}  # {stock_name: quantity}
 
-    def check_portfolio(self):
+    def check_portfolio(self, stock_market):
         raise NotImplementedError()
 
     def choose_action(self, actions: list[Action], indent: int = 0) -> Action:
