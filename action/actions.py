@@ -48,7 +48,8 @@ class CheckPortfolio(Action):
 
     def run(self) -> None:
         self.player.check_portfolio()
-        
+
+
 class CheckBalance(Action):
     def __init__(self, player: Player) -> None:
         self.name: str = "Check Balance"
@@ -65,6 +66,11 @@ class SellStock(Action):
         self.stock_market: StockMarket = stock_market
 
     def run(self) -> None:
+
+        if (self.player.choose_sell_stock(self.stock_market) is None):
+            print("CHOOSE SELL STOCK RETURNS NONE")
+            return
+
         stock_name, quantity = self.player.choose_sell_stock(self.stock_market)
 
         # increase player capital
