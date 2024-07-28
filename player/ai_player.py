@@ -39,12 +39,12 @@ class AiPlayer(Player):
             print(prompt)
             # raw_input: str = input(indent_str + "Choose an action: ")
             print("choosing action...")
-            time.sleep(2)
+            time.sleep(3)
 
             try:
-
-                user_choice: int = 0
-                # user_choice: int = random.randint(0, num_actions)
+                # user_choice: int = 1
+                user_choice: int = random.randint(0, num_actions)
+                # user_choice: int = random.randint(0, 1)
 
                 if user_choice >= 0 and user_choice <= num_actions:
                     print("the choice was:", user_choice)
@@ -72,27 +72,16 @@ class AiPlayer(Player):
         print("stock chosen is:", stock_name)
 
         while True:
-            # stock_name: str = input(
-            #     "Enter the name of the stock you want to buy: ")
-            # stock: Stock = stock_market.get_stock(stock_name)
-            if stock is None:
-                print("Invalid stock name.")
-                continue
+            # if stock is None:
+            #     print("Invalid stock name.")
+            #     continue
 
             quantity: int
-            while True:
-                try:
-                    # quantity = int(
-                    #     input("Enter the quantity you want to buy: "))
-                    quantity = random.randint(0, 100)
-                except TypeError:
-                    continue
 
-                if quantity < 1:
-                    print("Quantity must be >= 1")
-                    continue
-
-                break
+            quantity = random.randint(1, 500)
+            if quantity < 1:
+                print("Quantity must be >= 1")
+                continue
 
             total_price: int = stock.price * quantity
 
@@ -100,7 +89,9 @@ class AiPlayer(Player):
                 print("Not enough capital")
                 continue
 
-            return stock_tik, quantity
+            break
+
+        return stock_tik, quantity
 
     def choose_sell_stock(self, stock_market: StockMarket) -> tuple[str, int]:
         self.check_portfolio()
@@ -109,29 +100,28 @@ class AiPlayer(Player):
             print("Portfolio Empty!")
             return None
 
-        while True:
-            stock_name: str = input(
-                "Enter the name of the stock you want to sell: ")
+        # choosing a stock to sell
+        stocks_owned = list(self.portfolio.keys())
+        stock_to_sell = random.choice(stocks_owned)
+        amount_to_sell = random.randint(1, self.portfolio[stock_to_sell])
+        print("stock that will be sold:  amount: {}".format(
+            stock_to_sell, amount_to_sell))
 
-            stock: Stock = stock_market.get_stock(stock_name)
+        while True:
+
+            stock: Stock = stock_market.get_stock(stock_to_sell)
             if stock is None:
                 print("Invalid stock name.")
                 continue
 
-            quantity_available = self.portfolio[stock_name]
+            quantity_available = self.portfolio[stock_to_sell]
 
-            quantity: int
             while True:
-                try:
-                    quantity = int(
-                        input("Enter the quantity you want to sell: "))
-                except TypeError:
-                    continue
 
-                if quantity < 1 or quantity > quantity_available:
+                if amount_to_sell < 1 or amount_to_sell > quantity_available:
                     print(f"Quantity must be 1-{quantity_available}")
                     continue
 
                 break
 
-            return stock_name, quantity
+            return stock_to_sell, amount_to_sell
