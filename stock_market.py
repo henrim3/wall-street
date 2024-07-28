@@ -11,7 +11,6 @@ RESET = '\033[0m'
 UNDERLINE = '\033[4m'
 
 
-
 class StockMarket:
 
     def __init__(self):
@@ -19,7 +18,8 @@ class StockMarket:
         self.stockandtickers = {}
 
     def initialize_stocks(self):
-        addStocks(self.stocks, self.stockandtickers, stockfile, marketsize, marketshares)
+        addStocks(self.stocks, self.stockandtickers,
+                  stockfile, marketsize, marketshares)
 
     def fluctuate_market(self):
         for stock in self.stocks:
@@ -29,7 +29,8 @@ class StockMarket:
         indent_str = " " * indent
         width = 120
         headers = ["Price ", "Daily Change", " Total Change"]
-        formatted_headers = str(headers[0]) + f"|{headers[1].center(14)}|" + f"{headers[2].center(14)}"
+        formatted_headers = str(
+            headers[0]) + f"|{headers[1].center(14)}|" + f"{headers[2].center(14)}"
         if (initial):
             print("Initial Stock Prices:")
         else:
@@ -42,7 +43,8 @@ class StockMarket:
         for stock in self.stocks:
             if not stock.isbluechip and not reachedpenny:
                 headers = [" ", " ", " "]
-                formatted_headers = str(headers[0]) + f"|{headers[1].center(14)}|" + f"{headers[2].center(14)}"
+                formatted_headers = str(
+                    headers[0]) + f"|{headers[1].center(14)}|" + f"{headers[2].center(14)}"
                 s = (f"{indent_str}Penny Stocks:")
                 padding = width - len(s) - len(formatted_headers)
                 pad = " "*padding
@@ -50,7 +52,8 @@ class StockMarket:
                 reachedpenny = True
             elif stock.isbluechip and not reachedblue:
                 headers = [" ", " ", " "]
-                formatted_headers = str(headers[0]) + f"|{headers[1].center(14)}|" + f"{headers[2].center(14)}"
+                formatted_headers = str(
+                    headers[0]) + f"|{headers[1].center(14)}|" + f"{headers[2].center(14)}"
                 s = (f"{indent_str}Blue Chip Stocks:")
                 padding = width - len(s) - len(formatted_headers)
                 pad = " "*padding
@@ -76,13 +79,20 @@ class StockMarket:
             headers = [f"${stock.price:.2f} ", change, totchange]
             leftpadding = " " * (midpadding // 2 + midpadding % 2)
             rightpadding = " " * (midpadding // 2)
-            formatted_headers = headers[0] + f"|" + leftpadding + headers[1] + rightpadding + "|" + f" {headers[2].ljust(13)}"
+            formatted_headers = headers[0] + f"|" + leftpadding + \
+                headers[1] + rightpadding + "|" + f" {headers[2].ljust(13)}"
             padding = width - len(s) - len(formatted_headers)
             pad = " "*padding
-            coloredheader = f"{YELLOW}${stock.price:.2f} {RESET}"+ f"|" + leftpadding + coloredchange + rightpadding + "|" + f" {coloredtotchange}"
-            print(f"{s}{pad}{coloredheader}")    
+            coloredheader = f"{YELLOW}${stock.price:.2f} {RESET}" + f"|" + \
+                leftpadding + coloredchange + rightpadding + \
+                    "|" + f" {coloredtotchange}"
+            print(f"{s}{pad}{coloredheader}")
         print("")
 
-    def get_stock(self, ticker)-> Stock: 
-        return self.stockandtickers.get(ticker)
-        
+   def get_stock(self, ticker):
+        if (ticker in self.stockandtickers.keys()):
+            return self.stockandtickers[ticker]
+        return None
+
+    def get_stocks(self):
+        return self.stockandtickers
