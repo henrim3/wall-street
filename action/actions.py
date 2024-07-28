@@ -19,7 +19,8 @@ class BuyStock(Action):
         self.stock_market: StockMarket = stock_market
 
     def run(self) -> None:
-        stock_ticker, quantity = self.player.choose_buy_stock(self.stock_market)
+        stock_ticker, quantity = self.player.choose_buy_stock(
+            self.stock_market)
 
         # decrease player capital
         stock: Stock = self.stock_market.get_stock(stock_ticker)
@@ -27,7 +28,7 @@ class BuyStock(Action):
         total_price: int = stock.price * quantity
         assert self.player.capital >= total_price
         self.player.capital -= total_price
-
+        stock.owned += quantity
         portfolio: dict = self.player.portfolio
 
         # add stock to portfolio if doesn't already exist
@@ -41,10 +42,10 @@ class BuyStock(Action):
 
 
 class CheckPortfolio(Action):
-    def __init__(self, player: Player) -> None:
+    def __init__(self, player: Player, stock_market: StockMarket) -> None:
         self.name: str = "Check Portfolio"
-
         self.player: Player = player
+        self.stock_market: StockMarket = stock_market
 
     def run(self) -> None:
         self.player.check_portfolio()
@@ -57,6 +58,17 @@ class CheckBalance(Action):
 
     def run(self) -> None:
         print(f"{self.player.name}'s Current Balance: ${self.player.capital:.2f}")
+
+
+class GetStockInfo(Action):
+    def __init__(self, player: Player, stock_market: StockMarket) -> None:
+        self.name: str = "Get Stock Information"
+        self.player: Player = player
+        self.stock_market: StockMarket = stock_market
+
+    def run(self) -> None:
+        stock = self.player.choose_get_info(self.stock_market)
+        stock.printinfo()
 
 
 class SellStock(Action):

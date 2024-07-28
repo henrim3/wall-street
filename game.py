@@ -14,12 +14,49 @@ TURN_ACTIONS = [
 
 
 class Game:
+    RETRO_GREEN = "\033[92m"
+    END_COLOR = "\033[0m"
+    
+    ascii_art_title = """
+
+          _____                    _____                    _____     _____                    _____             _____                    _____                    _____                    _____             _____          
+         /\    \                  /\    \                  /\    \   /\    \                  /\    \           /\    \                  /\    \                  /\    \                  /\    \           /\    \         
+        /::\____\                /::\    \                /::\____\ /::\____\                /::\    \         /::\    \                /::\    \                /::\    \                /::\    \         /::\    \        
+       /:::/    /               /::::\    \              /:::/    //:::/    /               /::::\    \        \:::\    \              /::::\    \              /::::\    \              /::::\    \        \:::\    \       
+      /:::/   _/___            /::::::\    \            /:::/    //:::/    /               /::::::\    \        \:::\    \            /::::::\    \            /::::::\    \            /::::::\    \        \:::\    \      
+     /:::/   /\    \          /:::/\:::\    \          /:::/    //:::/    /               /:::/\:::\    \        \:::\    \          /:::/\:::\    \          /:::/\:::\    \          /:::/\:::\    \        \:::\    \     
+    /:::/   /::\____\        /:::/__\:::\    \        /:::/    //:::/    /               /:::/__\:::\    \        \:::\    \        /:::/__\:::\    \        /:::/__\:::\    \        /:::/__\:::\    \        \:::\    \    
+   /:::/   /:::/    /       /::::\   \:::\    \      /:::/    //:::/    /                \:::\   \:::\    \       /::::\    \      /::::\   \:::\    \      /::::\   \:::\    \      /::::\   \:::\    \       /::::\    \   
+  /:::/   /:::/   _/___    /::::::\   \:::\    \    /:::/    //:::/    /               ___\:::\   \:::\    \     /::::::\    \    /::::::\   \:::\    \    /::::::\   \:::\    \    /::::::\   \:::\    \     /::::::\    \  
+ /:::/___/:::/   /\    \  /:::/\:::\   \:::\    \  /:::/    //:::/    /               /\   \:::\   \:::\    \   /:::/\:::\    \  /:::/\:::\   \:::\____\  /:::/\:::\   \:::\    \  /:::/\:::\   \:::\    \   /:::/\:::\    \ 
+|:::|   /:::/   /::\____\/:::/  \:::\   \:::\____\/:::/____//:::/____/               /::\   \:::\   \:::\____\ /:::/  \:::\____\/:::/  \:::\   \:::|    |/:::/__\:::\   \:::\____\/:::/__\:::\   \:::\____\ /:::/  \:::\____\
+|:::|__/:::/   /:::/    /\::/    \:::\  /:::/    /\:::\    \\:::\    \               \:::\   \:::\   \::/    //:::/    \::/    /\::/   |::::\  /:::|____|\:::\   \:::\   \::/    /\:::\   \:::\   \::/    //:::/    \::/    /
+ \:::\/:::/   /:::/    /  \/____/ \:::\/:::/    /  \:::\    \\:::\    \               \:::\   \:::\   \/____//:::/    / \/____/  \/____|:::::\/:::/    /  \:::\   \:::\   \/____/  \:::\   \:::\   \/____//:::/    / \/____/ 
+  \::::::/   /:::/    /            \::::::/    /    \:::\    \\:::\    \               \:::\   \:::\    \   /:::/    /                 |:::::::::/    /    \:::\   \:::\    \       \:::\   \:::\    \   /:::/    /          
+   \::::/___/:::/    /              \::::/    /      \:::\    \\:::\    \               \:::\   \:::\____\ /:::/    /                  |::|\::::/    /      \:::\   \:::\____\       \:::\   \:::\____\ /:::/    /           
+    \:::\__/:::/    /               /:::/    /        \:::\    \\:::\    \               \:::\  /:::/    / \::/    /                   |::| \::/____/        \:::\   \::/    /        \:::\   \::/    / \::/    /            
+     \::::::::/    /               /:::/    /          \:::\    \\:::\    \               \:::\/:::/    /   \/____/                    |::|  ~|               \:::\   \/____/          \:::\   \/____/   \/____/             
+      \::::::/    /               /:::/    /            \:::\    \\:::\    \               \::::::/    /                               |::|   |                \:::\    \               \:::\    \                           
+       \::::/    /               /:::/    /              \:::\____\\:::\____\               \::::/    /                                \::|   |                 \:::\____\               \:::\____\                          
+        \::/____/                \::/    /                \::/    / \::/    /                \::/    /                                  \:|   |                  \::/    /                \::/    /                          
+         ~~                       \/____/                  \/____/   \/____/                  \/____/                                    \|___|                   \/____/                  \/____/                           
+                                                                                                                                                                                                                                                                                                                               
+                                                                                                                                                                                                                                                                                                                                                                                                                                 
+                                                                                                                                                                                            
+
+
+"""
+    
     def __init__(self, num_players):
         self.num_players = num_players
         self.players = []
         self.stock_market = StockMarket()
 
+    def print_title(self):
+        print(f"{self.RETRO_GREEN}{self.ascii_art_title}{self.END_COLOR}")
+
     def initialize_game(self):
+        self.print_title()
         self.stock_market.initialize_stocks()
         self.stock_market.print_market_status(True)
         self.players = [
@@ -35,10 +72,13 @@ class Game:
             self.stock_market.fluctuate_market()
             self.stock_market.print_market_status(False)
             for player in self.players:
+                print(f"\n{self.RETRO_GREEN}--------------------{self.END_COLOR}")
                 self.player_turn(player)
+                print(f"{self.RETRO_GREEN}--------------------{self.END_COLOR}\n")
 
     def player_turn(self, player):
         print(f"-------------{player.name}'s TURN-------------")
+        print(f"\nCaptial: ${player.capital}")
         while(True):
             action: str = choice_input(
                 TURN_ACTIONS, "Choose an action: ", "Actions")[1]
@@ -51,11 +91,11 @@ class Game:
             elif action == "Check Balance":
                 player.check_balance()
             elif action == "Allocate to Buyout Fund":
-                inp = input("Enter amount to allocate to Buyout Fund: ")
-                if inp.isdigit():
-                    amount = int(inp)
+                inp = input(f"Enter amount to allocate to Buyout Fund (up to ${player.capital:.2f}): ")
+                try:
+                    amount = float(inp)
                     player.allocate_to_buyout_fund(amount)
-                else:
+                except ValueError:
                     print("Error: Invalid amount.")
             elif action == "End Turn":
                 print(f"{player.name} completed their turn.")
@@ -72,22 +112,32 @@ class Game:
     def buy_stock_action(self, player):
         self.stock_market.print_market_status(False)
         ticker = input("Enter the ticker of the stock you want to buy: ")
-        inp = input("Enter the quantity you want to buy: ")
-        if ticker in self.stock_market.stockandtickers and inp.isdigit():
-            quantity = int(inp)
+        if ticker in self.stock_market.stockandtickers:
             curstock = self.stock_market.get_stock(ticker)
-            player.buy_stock(curstock, quantity)
+            maxamt = int(player.capital // curstock.price)
+            inp = input(f"Enter the quantity you want to buy (up to {maxamt}): ")
+            if inp.isdigit():
+                quantity = int(inp)
+                player.buy_stock(curstock, quantity)
+            else:
+                print("Error: Invalid input.")
         else:
             print("Error: Invalid input.")
 
     def sell_stock_action(self, player):
         player.check_portfolio()
-        stock_ticker = input("Enter the ticker of the stock you want to sell: ")
-        inp = input("Enter the quantity you want to sell: ")
-        if stock_ticker in self.stock_market.stockandtickers and inp.isdigit():
-            quantity = int(inp)
+        stock_ticker = input("\nEnter the ticker of the stock you want to sell: ")
+        if stock_ticker in self.stock_market.stockandtickers:
             curstock = self.stock_market.get_stock(stock_ticker)
-            player.sell_stock(curstock, quantity)
+            if curstock in player.portfolio:
+                inp = input(f"Enter the quantity you want to sell (up to {player.portfolio[curstock]}): ")
+                if inp.isdigit():
+                    quantity = int(inp)
+                    player.sell_stock(curstock, quantity)
+                else:
+                    print("Error: Invalid input.")
+            else:
+                print(f"No shares of {stock_ticker} owned.")
         else:
             print("Error: Invalid input.")
             
@@ -97,10 +147,10 @@ class Game:
         # Logic for Golden Opportunity Phase
 
     def end_game(self):
-        print("Game Over. Final Portfolios:")
+        print(f"{self.RETRO_GREEN}Game Over. Final Portfolios:{self.END_COLOR}")
         for player in self.players:
             player.check_portfolio()
-        print("Thank you for playing!")
+        print(f"{self.RETRO_GREEN}Thank you for playing!{self.END_COLOR}")
 
     def run(self):
         self.initialize_game()
