@@ -89,7 +89,7 @@ class StockMarket:
             print(f"{s}{pad}{coloredheader}")
         print("")
 
-   def get_stock(self, ticker):
+    def get_stock(self, ticker):
         if (ticker in self.stockandtickers.keys()):
             return self.stockandtickers[ticker]
         return None
