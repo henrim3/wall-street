@@ -8,17 +8,17 @@ if __name__ == "__main__":
     team1 = Team(
         "Team 1",
         [
-            AiPlayer("Bob", 10000, 3),
-            AiPlayer("Avery", 10000, 3),
-            AiPlayer("Jeff", 10000, 3),
+            RealPlayer("Bob", 10000, 3),
+            RealPlayer("Avery", 10000, 3),
+            RealPlayer("Jeff", 10000, 3),
         ])
 
     team2 = Team(
         "Team 2",
         [
-            AiPlayer("Frank", 10000, 3),
-            AiPlayer("Croc", 10000, 3),
-            AiPlayer("Ghost", 10000, 3),
+            RealPlayer("Frank", 10000, 3),
+            RealPlayer("Croc", 10000, 3),
+            RealPlayer("Ghost", 10000, 3),
         ])
 
     stock_market = StockMarket()
