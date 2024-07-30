@@ -12,11 +12,34 @@ class RealPlayer(Player):
         self.portfolio: dict[str, int] = {}  # {stock: quantity}
         self.transactions: list = []
 
-    def check_portfolio(self):
+    def check_portfolio(self, stock_market: StockMarket, indent = 2):
         print(f"{self.name}'s Portfolio:")
-        for stock, quantity in self.portfolio.items():
-            print(f"{stock}: {quantity} shares")
-        print()
+        indentstr = " " * indent
+        total = 0
+        reachedblue = False
+        reachedpenny = False
+        pennies = []
+        blue = []
+        for stock in self.portfolio.keys():
+            stockobj = stock_market.get_stock(stock)
+            total += stockobj.price * self.portfolio[stock]
+            if stockobj.isbluechip:
+                blue.append(stock)
+            else:
+                pennies.append(stock)
+        pennies.sort()
+        blue.sort()
+        for stock in pennies:
+            if not reachedpenny:
+                print(f"{indentstr}Owned Penny Stocks:")
+                reachedpenny = True
+            print(f"{indentstr}{indentstr}{stock}: {self.portfolio[stock]} shares")
+        for stock in blue:
+            if not reachedblue:
+                print(f"{indentstr}Owned Blue Chip Stocks:")
+                reachedblue = True
+            print(f"{indentstr}{indentstr}{stock}: {self.portfolio[stock]} shares")
+        print(f"Total portfolio value: ${total:.2f}")
 
     def choose_action(self, actions: list[Action], indent: int = 0) -> Action:
         indent_str: str = " " * indent
@@ -59,10 +82,12 @@ class RealPlayer(Player):
 
             quantity: int
             while True:
+                maxamt = int(self.capital // stock.price)
                 try:
                     quantity = int(
-                        input("Enter the quantity you want to buy: "))
-                except TypeError:
+                        input(f"Enter the quantity you want to buy (up to {maxamt}): "))
+                except ValueError:
+                    print("Quantity shoud be a number.")
                     continue
 
                 if quantity < 1:
@@ -80,7 +105,7 @@ class RealPlayer(Player):
             return stock_name, quantity
 
     def choose_sell_stock(self, stock_market: StockMarket) -> tuple[str, int]:
-        self.check_portfolio()
+        self.check_portfolio(stock_market)
 
         while True:
             stock_name: str = input(
@@ -91,13 +116,17 @@ class RealPlayer(Player):
                 print("Invalid stock name.")
                 continue
 
-            quantity_available = self.portfolio[stock_name]
+            quantity_available = self.portfolio.get(stock_name)
 
             quantity: int
+            
+            if quantity_available is None:
+                print(f"No shares of {stock_name} available to sell.")
+                continue
             while True:
                 try:
                     quantity = int(
-                        input("Enter the quantity you want to sell: "))
+                        input(f"Enter the quantity you want to sell (up to {quantity_available}): "))
                 except TypeError:
                     continue
 
@@ -108,3 +137,14 @@ class RealPlayer(Player):
                 break
 
             return stock_name, quantity
+
+    def choose_get_info(self, stock_market: StockMarket) -> str:
+        stock_market.print_market_status(False)
+        while True:
+            stock_name: str = input(
+                "Enter the name of the stock you want to get information on: ")
+            stock: Stock = stock_market.get_stock(stock_name)
+            if stock is None:
+                print("Invalid stock name.")
+                continue
+            return stock

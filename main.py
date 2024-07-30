@@ -1,5 +1,6 @@
 from stock_market import StockMarket
 from player.real_player import RealPlayer
+from player.ai_player import AiPlayer
 from team import Team
 from turn.build_turn import BuildTurn
 
