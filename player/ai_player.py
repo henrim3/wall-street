@@ -34,27 +34,16 @@ class AiPlayer(Player):
 
         num_actions: int = len(actions) - 1
         user_choice: int
-        while True:
-            print(prompt)
-            # raw_input: str = input(indent_str + "Choose an action: ")
-            print("choosing action...")
-            time.sleep(3)
 
-            try:
-                # user_choice: int = 1
-                user_choice: int = random.randint(0, num_actions)
-                # user_choice: int = random.randint(0, 1)
+        print(prompt)
+        print("\nchoosing action...")
+        time.sleep(2)
 
-                if user_choice >= 0 and user_choice <= num_actions:
-                    print("the choice was:", user_choice)
-                    print()
-                    break
-                else:
-                    print(
-                        f"\n{indent_str}Error: Input must be in range 0-{num_actions}\n")
-            except ValueError:
-                print("\n{indent_str}Error: Input must be a number\n")
-                continue
+        # user_choice: int = 0
+        user_choice: int = random.randint(0, num_actions)
+
+        print("the choice was:", user_choice)
+        time.sleep(2)
 
         return actions[user_choice]
 
@@ -63,31 +52,28 @@ class AiPlayer(Player):
 
         stocks_dict = stock_market.get_stocks()
 
+        print("Choosing which stock to buy")
+        time.sleep(2)
         keys = list(stocks_dict.keys())
         stock_tik = random.choice(keys)
         print("stock chosen is(ticker):", stock_tik)
         stock = stocks_dict.get(stock_tik)
         stock_name = stock.name
         print("stock chosen is:", stock_name)
+        time.sleep(2)
 
         while True:
-            # if stock is None:
-            #     print("Invalid stock name.")
-            #     continue
 
-            quantity: int
-
-            quantity = random.randint(1, 500)
-            if quantity < 1:
-                print("Quantity must be >= 1")
-                continue
+            quantity: int = random.randint(1, 500)
+            print("Trying to buy {} stocks".format(quantity))
+            time.sleep(2)
 
             total_price: int = stock.price * quantity
 
             if total_price > self.capital:
                 print("Not enough capital")
+                time.sleep(2)
                 continue
-
             break
 
         return stock_tik, quantity
@@ -97,41 +83,34 @@ class AiPlayer(Player):
 
         if (len(self.portfolio) == 0):
             print("Portfolio Empty!")
+            time.sleep(2)
             return None
 
         # choosing a stock to sell
         stocks_owned = list(self.portfolio.keys())
         stock_to_sell = random.choice(stocks_owned)
         amount_to_sell = random.randint(1, self.portfolio[stock_to_sell])
-        print("stock that will be sold:  amount: {}".format(
+        print("stock that will be sold: {}  amount: {}".format(
             stock_to_sell, amount_to_sell))
 
-        while True:
+        return stock_to_sell, amount_to_sell
 
-            stock: Stock = stock_market.get_stock(stock_to_sell)
-            if stock is None:
-                print("Invalid stock name.")
-                continue
+    def choose_get_info(self, stock_market: StockMarket) -> str:
+        stock_market.print_market_status(False)
 
-            quantity_available = self.portfolio[stock_to_sell]
+        stocks_dict = stock_market.get_stocks()
 
-            while True:
+        keys = list(stocks_dict.keys())
+        stock_tik = random.choice(keys)
+        time.sleep(2)
+        print("stock chosen is(ticker):", stock_tik)
 
-                if amount_to_sell < 1 or amount_to_sell > quantity_available:
-                    print(f"Quantity must be 1-{quantity_available}")
-                    continue
+        stock = stocks_dict.get(stock_tik)
 
-                break
+        stock_name = stock.name
 
-            return stock_to_sell, amount_to_sell
+        stock: Stock = stock_market.get_stock(stock_tik)
+        print("stock chosen is:", stock_name)
+        time.sleep(2)
 
-        def choose_get_info(self, stock_market: StockMarket) -> str:
-            stock_market.print_market_status(False)
-            while True:
-                stock_name: str = input(
-                    "Enter the name of the stock you want to get information on: ")
-                stock: Stock = stock_market.get_stock(stock_name)
-                if stock is None:
-                    print("Invalid stock name.")
-                    continue
-                return stock
+        return stock
