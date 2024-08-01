@@ -1,7 +1,11 @@
 from action import Action
 from player import Player
-from stock import Stock
-from stock_market import StockMarket
+from stock_market.stock import Stock
+from stock_market.stock_market import StockMarket
+from stock_market.transaction import Transaction
+
+CompleteTransactions = False   #Set CompleteTransactions = True to see other teams transactions as well
+AnonymousTransactions = True   #Set AnonymousTransactions = False to see player name in transaction
 
 
 class AllocateToBuyoutFund(Action):
@@ -38,6 +42,10 @@ class BuyStock(Action):
         # add stock to portfolio
         portfolio[stock_ticker] += quantity
 
+        #add transaction to market
+        transaction: Transaction = Transaction(self.player, stock, quantity, total_price, True)
+        self.stock_market.transactions.append(transaction)
+
         print(f"Bought {quantity} shares of {stock_ticker}")
 
 
@@ -70,6 +78,30 @@ class GetStockInfo(Action):
         stock = self.player.choose_get_info(self.stock_market)
         stock.printinfo()
 
+class GetTransactionHistory(Action):
+
+    def __init__(self, player: Player, stock_market: StockMarket) -> None:
+        self.name: str = "Get Transaction History"
+        self.player: Player = player
+        self.stock_market: StockMarket = stock_market
+
+    def run(self) -> None:
+        print("Transactions:")
+        indentstr: str = " " * 2
+        for transaction in self.stock_market.transactions:
+            player: str = "Player"
+            share: str = "shares"
+            action: str = "bought"
+            if not AnonymousTransactions:
+                player = self.player.name
+            if transaction.quantity == 1:
+                share = "share"
+            if not transaction.buying:
+                action = "sold"
+            if (transaction.player.team == self.player.team) or CompleteTransactions:
+                print(f"{indentstr}{transaction.player.name} {action} {transaction.quantity} {share} of {transaction.stock.name} for ${transaction.price:.2f}")
+
+
 
 class SellStock(Action):
     def __init__(self, player: Player, stock_market: StockMarket) -> None:
@@ -79,11 +111,12 @@ class SellStock(Action):
 
     def run(self) -> None:
 
-        if (self.player.choose_sell_stock(self.stock_market) is None):
+        
+        stock_name, quantity = self.player.choose_sell_stock(self.stock_market)
+    
+        if (stock_name is None or quantity is None):
             print("CHOOSE SELL STOCK RETURNS NONE")
             return
-
-        stock_name, quantity = self.player.choose_sell_stock(self.stock_market)
 
         # increase player capital
         stock: Stock = self.stock_market.get_stock(stock_name)
@@ -97,6 +130,10 @@ class SellStock(Action):
         assert stock_name in portfolio.keys()
         assert portfolio[stock_name] >= quantity
         portfolio[stock_name] -= quantity
+
+        #add transaction to market
+        transaction: Transaction = Transaction(self.player, stock, quantity, total_sale, False)
+        self.stock_market.transactions.append(transaction)
 
         print(f"Sold {quantity} shares of {stock_name}")
 

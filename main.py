@@ -1,4 +1,4 @@
-from stock_market import StockMarket
+from stock_market.stock_market import StockMarket
 from player.real_player import RealPlayer
 from player.ai_player import AiPlayer
 from team import Team
