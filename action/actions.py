@@ -48,7 +48,7 @@ class CheckPortfolio(Action):
         self.stock_market: StockMarket = stock_market
 
     def run(self) -> None:
-        self.player.check_portfolio()
+        self.player.check_portfolio(self.stock_market)
 
 
 class CheckBalance(Action):
