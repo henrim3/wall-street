@@ -93,13 +93,13 @@ class GetTransactionHistory(Action):
             share: str = "shares"
             action: str = "bought"
             if not AnonymousTransactions:
-                player = self.player.name
+                player = transaction.player.name
             if transaction.quantity == 1:
                 share = "share"
             if not transaction.buying:
                 action = "sold"
             if (transaction.player.team == self.player.team) or CompleteTransactions:
-                print(f"{indentstr}{transaction.player.name} {action} {transaction.quantity} {share} of {transaction.stock.name} for ${transaction.price:.2f}")
+                print(f"{indentstr}{player} {action} {transaction.quantity} {share} of {transaction.stock.name} for ${transaction.price:.2f}")
 
 
 
