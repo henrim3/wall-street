@@ -1,5 +1,5 @@
-from stock import Stock
-from stockparser import addStocks
+from stock_market.stock import Stock
+from stock_market.stockparser import addStocks
 
 stockfile = "data/NASDAQ.txt"
 marketsize = 20
@@ -14,8 +14,10 @@ UNDERLINE = '\033[4m'
 class StockMarket:
 
     def __init__(self):
+        from stock_market.transaction import Transaction
         self.stocks: list[Stock] = []
         self.stockandtickers = {}
+        self.transactions: list[Transaction] = []
 
     def initialize_stocks(self):
         addStocks(self.stocks, self.stockandtickers,

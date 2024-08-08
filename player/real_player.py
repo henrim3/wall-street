@@ -1,7 +1,7 @@
 from action import Action
 from player import Player
-from stock import Stock
-from stock_market import StockMarket
+from stock_market.stock import Stock
+from stock_market.stock_market import StockMarket
 
 
 class RealPlayer(Player):
@@ -10,7 +10,6 @@ class RealPlayer(Player):
         self.capital: int = initial_capital
         self.percentage_stake: int = percentage_stake
         self.portfolio: dict[str, int] = {}  # {stock: quantity}
-        self.transactions: list = []
 
     def check_portfolio(self, stock_market: StockMarket, indent = 2):
         print(f"{self.name}'s Portfolio:")
@@ -64,7 +63,7 @@ class RealPlayer(Player):
                     print(
                         f"\n{indent_str}Error: Input must be in range 0-{num_actions}\n")
             except ValueError:
-                print("\n{indent_str}Error: Input must be a number\n")
+                print(f"\n{indent_str}Error: Input must be a number\n")
                 continue
 
         return actions[user_choice]
@@ -74,19 +73,23 @@ class RealPlayer(Player):
 
         while True:
             stock_name: str = input(
-                "Enter the name of the stock you want to buy: ")
+                "Enter the name of the stock you want to buy (q to quit): ")
             stock: Stock = stock_market.get_stock(stock_name)
             if stock is None:
+                if stock_name == "q":
+                    return [None, None]
                 print("Invalid stock name.")
                 continue
 
             quantity: int
             while True:
                 maxamt = int(self.capital // stock.price)
+                tmp: str = input(f"Enter the quantity you want to buy (up to {maxamt}) (q to quit): ").strip()
                 try:
-                    quantity = int(
-                        input(f"Enter the quantity you want to buy (up to {maxamt}): "))
+                    quantity = int(tmp)
                 except ValueError:
+                    if tmp == "q":
+                        return [None, None]
                     print("Quantity shoud be a number.")
                     continue
 
@@ -106,13 +109,17 @@ class RealPlayer(Player):
 
     def choose_sell_stock(self, stock_market: StockMarket) -> tuple[str, int]:
         self.check_portfolio(stock_market)
-
+        if not self.portfolio:
+            print("No shares available to sell")
+            return [None, None]
         while True:
             stock_name: str = input(
-                "Enter the name of the stock you want to sell: ")
+                "Enter the name of the stock you want to sell (q to quit): ")
 
             stock: Stock = stock_market.get_stock(stock_name)
             if stock is None:
+                if stock_name == "q":
+                    return [None, None]
                 print("Invalid stock name.")
                 continue
 
@@ -124,10 +131,12 @@ class RealPlayer(Player):
                 print(f"No shares of {stock_name} available to sell.")
                 continue
             while True:
+                tmp : str = input(f"Enter the quantity you want to sell (up to {quantity_available}) (q to quit): ")
                 try:
-                    quantity = int(
-                        input(f"Enter the quantity you want to sell (up to {quantity_available}): "))
-                except TypeError:
+                    quantity = int(tmp)
+                except ValueError:
+                    if tmp == "q":
+                        return [None, None]
                     continue
 
                 if quantity < 1 or quantity > quantity_available:
@@ -138,13 +147,15 @@ class RealPlayer(Player):
 
             return stock_name, quantity
 
-    def choose_get_info(self, stock_market: StockMarket) -> str:
+    def choose_get_info(self, stock_market: StockMarket) -> Stock:
         stock_market.print_market_status(False)
         while True:
             stock_name: str = input(
-                "Enter the name of the stock you want to get information on: ")
+                "Enter the name of the stock you want to get information on (q to quit): ")
             stock: Stock = stock_market.get_stock(stock_name)
             if stock is None:
+                if stock_name == "q":
+                    return None
                 print("Invalid stock name.")
                 continue
             return stock

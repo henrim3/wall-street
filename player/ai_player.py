@@ -1,7 +1,7 @@
 from action import Action
 from player import Player
-from stock import Stock
-from stock_market import StockMarket
+from stock_market.stock import Stock
+from stock_market.stock_market import StockMarket
 import random
 import time
 
@@ -12,7 +12,6 @@ class AiPlayer(Player):
         self.capital: int = initial_capital
         self.percentage_stake: int = percentage_stake
         self.portfolio: dict[str, int] = {}  # {stock: quantity}
-        self.transactions: list = []
 
     def check_portfolio(self):
         print(f"{self.name}'s Portfolio:")
