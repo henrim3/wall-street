@@ -1,6 +1,7 @@
 from stock_market.stock_market import StockMarket
 from player.real_player import RealPlayer
-from player.ai_player import AiPlayer
+# from player.ai_player import AiPlayer
+from player.cheap_player import CheapPlayer
 from team import Team
 from turn.build_turn import BuildTurn
 
@@ -8,9 +9,9 @@ if __name__ == "__main__":
     team1 = Team(
         "Team 1",
         [
-            RealPlayer("Bob", 10000, 3),
-            RealPlayer("Avery", 10000, 3),
-            RealPlayer("Jeff", 10000, 3),
+            CheapPlayer("Bob", 10000, 3),
+            CheapPlayer("Avery", 10000, 3),
+            CheapPlayer("Jeff", 10000, 3),
         ])
 
     team2 = Team(

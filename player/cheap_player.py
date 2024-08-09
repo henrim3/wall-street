@@ -6,7 +6,7 @@ import random
 import time
 
 
-class AiPlayer(Player):
+class CheapPlayer(Player):
     def __init__(self, name: str, initial_capital: int, percentage_stake: int):
         self.name: str = name
         self.capital: int = initial_capital
