@@ -13,7 +13,7 @@ class AiPlayer(Player):
         self.percentage_stake: int = percentage_stake
         self.portfolio: dict[str, int] = {}  # {stock: quantity}
 
-    def check_portfolio(self):
+    def check_portfolio(self, stock_market: StockMarket, indent=2):
         print(f"{self.name}'s Portfolio:")
 
         if len(self.portfolio.items()) == 0:
@@ -33,14 +33,13 @@ class AiPlayer(Player):
             prompt += f"\n  {indent_str}{i}: {action.name}"
 
         num_actions: int = len(actions) - 1
-        user_choice: int
 
         print(prompt)
         print("\nchoosing action...")
         time.sleep(2)
 
-        # user_choice: int = 0
-        user_choice: int = random.randint(0, num_actions)
+        user_choice: int = 1
+        # user_choice: int = random.randint(0, num_actions)
 
         print("the choice was:", user_choice)
         time.sleep(2)
@@ -79,12 +78,12 @@ class AiPlayer(Player):
         return stock_tik, quantity
 
     def choose_sell_stock(self, stock_market: StockMarket) -> tuple[str, int]:
-        self.check_portfolio()
+        self.check_portfolio(stock_market)
 
         if (len(self.portfolio) == 0):
             print("Portfolio Empty!")
             time.sleep(2)
-            return None
+            return None, None
 
         # choosing a stock to sell
         stocks_owned = list(self.portfolio.keys())
