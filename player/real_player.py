@@ -1,7 +1,7 @@
 from action import Action
 from player import Player
-from stock import Stock
-from stock_market import StockMarket
+from stock_market.stock import Stock
+from stock_market.stock_market import StockMarket
 
 
 class RealPlayer(Player):
@@ -10,7 +10,6 @@ class RealPlayer(Player):
         self.capital: int = initial_capital
         self.percentage_stake: int = percentage_stake
         self.portfolio: dict[str, int] = {}  # {stock: quantity}
-        self.transactions: list = []
 
     def check_portfolio(self, stock_market: StockMarket, indent = 2):
         print(f"{self.name}'s Portfolio:")
@@ -64,7 +63,7 @@ class RealPlayer(Player):
                     print(
                         f"\n{indent_str}Error: Input must be in range 0-{num_actions}\n")
             except ValueError:
-                print("\n{indent_str}Error: Input must be a number\n")
+                print(f"\n{indent_str}Error: Input must be a number\n")
                 continue
 
         return actions[user_choice]
@@ -106,7 +105,6 @@ class RealPlayer(Player):
 
     def choose_sell_stock(self, stock_market: StockMarket) -> tuple[str, int]:
         self.check_portfolio(stock_market)
-
         while True:
             stock_name: str = input(
                 "Enter the name of the stock you want to sell: ")

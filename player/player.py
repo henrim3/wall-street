@@ -1,5 +1,5 @@
 from action import Action
-from stock_market import StockMarket
+from stock_market.stock_market import StockMarket
 
 
 class Player:
@@ -8,6 +8,10 @@ class Player:
         self.capital: int = initial_capital
         self.percentage_stake: int = percentage_stake
         self.portfolio: dict = {}  # {stock_name: quantity}
+        self.team = None
+    
+    def setTeam(self, team):
+        self.team = team
 
     def check_portfolio(self, stock_market):
         raise NotImplementedError()
@@ -20,3 +24,4 @@ class Player:
 
     def choose_sell_stock(self, stock_market: StockMarket) -> tuple[str, int]:
         raise NotImplementedError()
+
