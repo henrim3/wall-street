@@ -9,7 +9,7 @@ class Player:
         self.percentage_stake: int = percentage_stake
         self.portfolio: dict = {}  # {stock_name: quantity}
         self.team = None
-    
+
     def setTeam(self, team):
         self.team = team
 
@@ -25,3 +25,6 @@ class Player:
     def choose_sell_stock(self, stock_market: StockMarket) -> tuple[str, int]:
         raise NotImplementedError()
 
+
+def choose_go_investment_amount(self, go_stock) -> float:
+    raise NotImplementedError()

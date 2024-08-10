@@ -4,6 +4,7 @@ from stock_market.stock import Stock
 from stock_market.stock_market import StockMarket
 import random
 import time
+from turn.golden_opportunity_turn import GoldenOpportunityStock
 
 
 class AiPlayer(Player):
@@ -95,7 +96,7 @@ class AiPlayer(Player):
 
         return stock_to_sell, amount_to_sell
 
-    def choose_get_info(self, stock_market: StockMarket) -> str:
+    def choose_get_info(self, stock_market: StockMarket) -> Stock:
         stock_market.print_market_status(False)
 
         stocks_dict = stock_market.get_stocks()
@@ -114,3 +115,6 @@ class AiPlayer(Player):
         time.sleep(2)
 
         return stock
+
+    def choose_go_investment_amount(self, go_stock: GoldenOpportunityStock) -> float:
+        raise NotImplementedError

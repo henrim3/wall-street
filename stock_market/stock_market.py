@@ -89,7 +89,7 @@ class StockMarket:
             pad = " "*padding
             coloredheader = f"{YELLOW}${stock.price:.2f} {RESET}" + f"|" + \
                 leftpadding + coloredchange + rightpadding + \
-                    "|" + f" {coloredtotchange}"
+                "|" + f" {coloredtotchange}"
             print(f"{s}{pad}{coloredheader}")
         print("")
         print(f"Total available shares in the market: {self.availableshares}\n")

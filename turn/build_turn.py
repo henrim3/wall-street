@@ -9,14 +9,10 @@ from stock_market.stock_market import StockMarket
 class BuildTurn(Turn):
     def __init__(self, teams: list[Team], stock_market: StockMarket) -> None:
         self.name: str = "Build Turn"
-        self.turn_number: int = 1
         self.teams: list[Team] = teams
         self.stock_market: StockMarket = stock_market
 
-    def run(self) -> None:
-        
-        
-        
+    def run(self, turn_number: int) -> None:
         self.stock_market.fluctuate_market()
         for team in self.teams:
             for player in team.players:
@@ -32,7 +28,7 @@ class BuildTurn(Turn):
                 ]
 
                 while True:
-                    self.output()
+                    self.output(turn_number)
                     print(f"[{team.name}] {player.name}'s Turn")
 
                     action: Action = player.choose_action(actions, 2)
@@ -45,5 +41,3 @@ class BuildTurn(Turn):
 
                     if action.one_time is True:
                         actions.remove(action)
-
-        self.turn_number += 1
