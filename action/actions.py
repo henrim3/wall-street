@@ -25,10 +25,12 @@ class BuyStock(Action):
     def run(self) -> None:
         stock_ticker, quantity = self.player.choose_buy_stock(
             self.stock_market)
+        
+        if stock_ticker is None:
+            return
 
         # decrease player capital
         stock: Stock = self.stock_market.get_stock(stock_ticker)
-        assert stock is not None
         total_price: int = stock.price * quantity
         assert self.player.capital >= total_price
         self.player.capital -= total_price
@@ -75,7 +77,9 @@ class GetStockInfo(Action):
         self.stock_market: StockMarket = stock_market
 
     def run(self) -> None:
-        stock = self.player.choose_get_info(self.stock_market)
+        stock: Stock = self.player.choose_get_info(self.stock_market)
+        if stock is None:
+            return
         stock.printinfo()
 
 class GetTransactionHistory(Action):
@@ -115,7 +119,6 @@ class SellStock(Action):
         stock_name, quantity = self.player.choose_sell_stock(self.stock_market)
     
         if (stock_name is None or quantity is None):
-            print("CHOOSE SELL STOCK RETURNS NONE")
             return
 
         # increase player capital
