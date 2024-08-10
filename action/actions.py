@@ -33,8 +33,11 @@ class BuyStock(Action):
         stock: Stock = self.stock_market.get_stock(stock_ticker)
         total_price: int = stock.price * quantity
         assert self.player.capital >= total_price
+        assert stock.shares >= quantity
         self.player.capital -= total_price
         stock.owned += quantity
+        stock.shares -= quantity
+        self.stock_market.availableshares -= quantity
         portfolio: dict = self.player.portfolio
 
         # add stock to portfolio if doesn't already exist
@@ -127,6 +130,12 @@ class SellStock(Action):
         market_value: int = stock.price
         total_sale: int = market_value * quantity
         self.player.capital += total_sale
+
+        #Increase stock shares available and marketshares
+
+        stock.shares += quantity
+        stock.owned -= quantity
+        self.stock_market.availableshares += quantity
 
         # remove from portflio
         portfolio: dict = self.player.portfolio
