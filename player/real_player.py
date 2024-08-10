@@ -22,9 +22,9 @@ class RealPlayer(Player):
         for stock in self.portfolio.keys():
             stockobj = stock_market.get_stock(stock)
             total += stockobj.price * self.portfolio[stock]
-            if stockobj.isbluechip:
+            if stockobj.isbluechip and self.portfolio[stock] != 0:
                 blue.append(stock)
-            else:
+            elif self.portfolio[stock] != 0:
                 pennies.append(stock)
         pennies.sort()
         blue.sort()
@@ -80,10 +80,16 @@ class RealPlayer(Player):
                     return [None, None]
                 print("Invalid stock name.")
                 continue
-
+            if stock.shares <= 0:
+                print(("No shares available."))
+                continue
             quantity: int
+            stock.printinfo()
+            print("")
             while True:
                 maxamt = int(self.capital // stock.price)
+                if stock.shares < maxamt:
+                    maxamt = stock.shares
                 tmp: str = input(f"Enter the quantity you want to buy (up to {maxamt}) (q to quit): ").strip()
                 try:
                     quantity = int(tmp)
@@ -91,6 +97,7 @@ class RealPlayer(Player):
                     if tmp == "q":
                         return [None, None]
                     print("Quantity shoud be a number.")
+                    print("Quantity should be a number.")
                     continue
 
                 if quantity < 1:
@@ -105,11 +112,19 @@ class RealPlayer(Player):
                 print("Not enough capital")
                 continue
 
+            elif quantity > stock.shares:
+                print(f"{stock.ticker} only has {stock.shares} available shares.")
+                continue
+
             return stock_name, quantity
 
     def choose_sell_stock(self, stock_market: StockMarket) -> tuple[str, int]:
         self.check_portfolio(stock_market)
-        if not self.portfolio:
+        empty: bool = True
+        for key in self.portfolio.keys():
+            if self.portfolio[key] != 0:
+                empty = False
+        if not self.portfolio or empty:
             print("No shares available to sell")
             return [None, None]
         while True:
@@ -127,7 +142,7 @@ class RealPlayer(Player):
 
             quantity: int
             
-            if quantity_available is None:
+            if quantity_available is None or quantity_available == 0:
                 print(f"No shares of {stock_name} available to sell.")
                 continue
             while True:
