@@ -3,7 +3,7 @@ from stock_market.stockparser import addStocks
 
 stockfile = "data/NASDAQ.txt"
 marketsize = 20
-marketshares = 100000
+amtshares = 100000
 RED = '\033[91m'
 GREEN = '\033[92m'
 YELLOW = '\033[93m'
@@ -18,10 +18,12 @@ class StockMarket:
         self.stocks: list[Stock] = []
         self.stockandtickers = {}
         self.transactions: list[Transaction] = []
+        self.totalshares: int = amtshares # Total available shares in the market
+        self.availableshares: int = amtshares
 
     def initialize_stocks(self):
         addStocks(self.stocks, self.stockandtickers,
-                  stockfile, marketsize, marketshares)
+                  stockfile, marketsize, self.totalshares)
 
     def fluctuate_market(self):
         for stock in self.stocks:
@@ -90,6 +92,7 @@ class StockMarket:
                     "|" + f" {coloredtotchange}"
             print(f"{s}{pad}{coloredheader}")
         print("")
+        print(f"Total available shares in the market: {self.availableshares}\n")
 
     def get_stock(self, ticker):
         if (ticker in self.stockandtickers.keys()):
