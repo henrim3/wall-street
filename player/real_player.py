@@ -2,6 +2,7 @@ from action import Action
 from player import Player
 from stock_market.stock import Stock
 from stock_market.stock_market import StockMarket
+from turn.golden_opportunity_turn import GoldenOpportunityStock
 
 
 class RealPlayer(Player):
@@ -11,7 +12,7 @@ class RealPlayer(Player):
         self.percentage_stake: int = percentage_stake
         self.portfolio: dict[str, int] = {}  # {stock: quantity}
 
-    def check_portfolio(self, stock_market: StockMarket, indent = 2):
+    def check_portfolio(self, stock_market: StockMarket, indent=2):
         print(f"{self.name}'s Portfolio:")
         indentstr = " " * indent
         total = 0
@@ -32,17 +33,22 @@ class RealPlayer(Player):
             if not reachedpenny:
                 print(f"{indentstr}Owned Penny Stocks:")
                 reachedpenny = True
-            print(f"{indentstr}{indentstr}{stock}: {self.portfolio[stock]} shares")
+            print(
+                f"{indentstr}{indentstr}{stock}: "
+                f"{self.portfolio[stock]} shares"
+            )
         for stock in blue:
             if not reachedblue:
                 print(f"{indentstr}Owned Blue Chip Stocks:")
                 reachedblue = True
-            print(f"{indentstr}{indentstr}{stock}: {self.portfolio[stock]} shares")
+            print(
+                f"{indentstr}{indentstr}{stock}: "
+                f"{self.portfolio[stock]} shares"
+            )
         print(f"Total portfolio value: ${total:.2f}")
 
     def choose_action(self, actions: list[Action], indent: int = 0) -> Action:
         indent_str: str = " " * indent
-
         prompt: str = indent_str + "Available Actions:"
 
         for i, action in enumerate(actions):
@@ -90,13 +96,13 @@ class RealPlayer(Player):
                 maxamt = int(self.capital // stock.price)
                 if stock.shares < maxamt:
                     maxamt = stock.shares
-                tmp: str = input(f"Enter the quantity you want to buy (up to {maxamt}) (q to quit): ").strip()
+                tmp: str = input(f"Enter the quantity you want to buy (up to "
+                                 f"{maxamt}) (q to quit): ").strip()
                 try:
                     quantity = int(tmp)
                 except ValueError:
                     if tmp == "q":
                         return [None, None]
-                    print("Quantity shoud be a number.")
                     print("Quantity should be a number.")
                     continue
 
@@ -113,7 +119,8 @@ class RealPlayer(Player):
                 continue
 
             elif quantity > stock.shares:
-                print(f"{stock.ticker} only has {stock.shares} available shares.")
+                print(f"{stock.ticker} only has "
+                      f"{stock.shares} available shares.")
                 continue
 
             return stock_name, quantity
@@ -141,13 +148,15 @@ class RealPlayer(Player):
             quantity_available = self.portfolio.get(stock_name)
 
             quantity: int
-            
+
             if quantity_available is None or quantity_available == 0:
                 print(f"No shares of {stock_name} available to sell.")
                 continue
             while True:
-                tmp : str = input(f"Enter the quantity you want to sell (up to {quantity_available}) (q to quit): ")
+                tmp: str = input(f"Enter the quantity you want to sell (up to "
+                                 f"{quantity_available}) (q to quit): ")
                 try:
+
                     quantity = int(tmp)
                 except ValueError:
                     if tmp == "q":
@@ -174,3 +183,24 @@ class RealPlayer(Player):
                 print("Invalid stock name.")
                 continue
             return stock
+
+    def choose_go_investment_amount(self, go_stock: GoldenOpportunityStock) -> float:
+        print("Golden Opportunity:")
+        print(go_stock)
+        print()
+        while True:
+            print(f"Your Capital: {self.capital}\n")
+            input_str: str = input("How much would you like to invest?: ")
+            invest_amt: float
+
+            try:
+                invest_amt = float(input_str)
+            except ValueError:
+                print("Input must be a number")
+                continue
+
+            if invest_amt < 0 or invest_amt > self.capital:
+                print(f"Input must be in range 0-{self.capital}")
+                continue
+
+            return invest_amt

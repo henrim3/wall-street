@@ -8,3 +8,10 @@ class Team:
         self.players: list[Player] = players
         for player in self.players:
             player.setTeam(self)
+        self.go_stocks: list = []
+
+    def get_total_capital(self):
+        total_capital: float = 0
+        for player in self.players:
+            total_capital += player.capital
+        return total_capital
