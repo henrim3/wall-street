@@ -1,8 +1,10 @@
 from stock_market.stock_market import StockMarket
-from player.real_player import RealPlayer
-from player.ai_player import AiPlayer
 from team import Team
-from turn.build_turn import BuildTurn
+from turn import BuildTurn, GoldenOpportunityTurn, run_turns
+from player.real_player import RealPlayer
+
+NUM_BUILD_TURNS = 5
+NUM_GO_TURNS = 1
 
 if __name__ == "__main__":
     team1 = Team(
@@ -21,14 +23,22 @@ if __name__ == "__main__":
             RealPlayer("Ghost", 10000, 3),
         ])
 
+    teams: list[Team] = [team1, team2]
+
     stock_market = StockMarket()
     stock_market.initialize_stocks()
 
     # Set the market condition to 'recession' for all stocks
     for stock in stock_market.stocks:
-        stock.set_market_condition('Normal')
+        stock.set_market_condition('normal')
 
-    build_turn = BuildTurn([team1, team2], stock_market)
+    build_turn: BuildTurn = BuildTurn(teams, stock_market)
+    go_turn: GoldenOpportunityTurn = GoldenOpportunityTurn(
+        teams, stock_market)
 
-    while True:
-        build_turn.run()
+    turns = [
+        [build_turn, NUM_BUILD_TURNS],
+        [go_turn, NUM_GO_TURNS],
+    ]
+
+    run_turns(turns)
