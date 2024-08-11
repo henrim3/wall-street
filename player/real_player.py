@@ -97,7 +97,7 @@ class RealPlayer(Player):
                 if stock.shares < maxamt:
                     maxamt = stock.shares
                 tmp: str = input(f"Enter the quantity you want to buy (up to "
-                                 f"{maxamt}) (q to quit): ").strip()
+                                 f"{maxamt:.0f}) (q to quit): ").strip()
                 try:
                     quantity = int(tmp)
                 except ValueError:
