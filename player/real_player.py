@@ -1,9 +1,10 @@
+from __future__ import annotations
 from action import Action
 from player import Player
+from team import Team
 from stock_market.stock import Stock
 from stock_market.stock_market import StockMarket
 from turn.golden_opportunity_turn import GoldenOpportunityStock
-
 
 class RealPlayer(Player):
     def __init__(self, name: str, initial_capital: int, percentage_stake: int):
@@ -11,8 +12,21 @@ class RealPlayer(Player):
         self.capital: int = initial_capital
         self.percentage_stake: int = percentage_stake
         self.portfolio: dict[str, int] = {}  # {stock: quantity}
+        self.team: Team = None
+        self.stock_market: StockMarket = None  # Initialize as None
+
+    def setTeam(self, team: Team) -> None:
+        self.team = team
+
+    def setStockMarket(self, stock_market: StockMarket) -> None:
+        self.stock_market = stock_market
 
     def check_portfolio(self, stock_market: StockMarket, indent=2):
+        # Ensure that stock_market is not None
+        if stock_market is None:
+            print("Stock market not set.")
+            return
+
         print(f"{self.name}'s Portfolio:")
         indentstr = " " * indent
         total = 0
@@ -27,25 +41,50 @@ class RealPlayer(Player):
                 blue.append(stock)
             elif self.portfolio[stock] != 0:
                 pennies.append(stock)
+
         pennies.sort()
         blue.sort()
+
         for stock in pennies:
             if not reachedpenny:
                 print(f"{indentstr}Owned Penny Stocks:")
                 reachedpenny = True
-            print(
-                f"{indentstr}{indentstr}{stock}: "
-                f"{self.portfolio[stock]} shares"
-            )
+            status = "Owned" if stock_market.get_stock(stock).owned > stock_market.get_stock(stock).needed else ""
+            print(f"{indentstr}{indentstr}{stock}: {self.portfolio[stock]} shares {status}")
+
         for stock in blue:
             if not reachedblue:
                 print(f"{indentstr}Owned Blue Chip Stocks:")
                 reachedblue = True
-            print(
-                f"{indentstr}{indentstr}{stock}: "
-                f"{self.portfolio[stock]} shares"
-            )
+            status = "Owned" if stock_market.get_stock(stock).owned > stock_market.get_stock(stock).needed else ""
+            print(f"{indentstr}{indentstr}{stock}: {self.portfolio[stock]} shares {status}")
+
         print(f"Total portfolio value: ${total:.2f}")
+
+    def check_team_portfolio(self, stock_market: StockMarket, indent=2):
+        if not self.team:
+            print("No team assigned.")
+            return
+
+        if stock_market is None:
+            print("Stock market not set.")
+            return
+
+        print(f"{self.team.name}'s Portfolio:")
+        indentstr = " " * indent
+        team_portfolio = self.team.team_portfolio
+        if not team_portfolio:
+            print(f"{indentstr}No stocks in team portfolio.")
+            return
+
+        for stock_name, quantity in team_portfolio.items():
+            stock = stock_market.get_stock(stock_name)
+            if stock.owned >= stock.needed:
+                percentage = (quantity / stock_market.total_shares(stock_name)) * 100
+                status = "Owned" if stock.owned >= stock.needed else ""
+                print(f"{indentstr}{stock_name}: {quantity} shares ({percentage:.2f}% of market) {status}")
+            else:
+                print(f"[DEBUG] Stock {stock_name} does not meet the needed threshold for display.")
 
     def choose_action(self, actions: list[Action], indent: int = 0) -> Action:
         indent_str: str = " " * indent
@@ -54,7 +93,10 @@ class RealPlayer(Player):
         for i, action in enumerate(actions):
             prompt += f"\n  {indent_str}{i}: {action.name}"
 
-        num_actions: int = len(actions) - 1
+        if self.team:
+            prompt += f"\n  {indent_str}{len(actions)}: Check Team Portfolio"
+
+        num_actions: int = len(actions)
         user_choice: int
         while True:
             print(prompt)
@@ -62,7 +104,7 @@ class RealPlayer(Player):
 
             try:
                 user_choice: int = int(raw_input)
-                if user_choice >= 0 and user_choice <= num_actions:
+                if 0 <= user_choice <= num_actions:
                     print()
                     break
                 else:
@@ -72,9 +114,20 @@ class RealPlayer(Player):
                 print(f"\n{indent_str}Error: Input must be a number\n")
                 continue
 
+        if user_choice == num_actions:
+            if self.stock_market is None:
+                print("Stock market not set.")
+                return None
+            self.check_team_portfolio(self.stock_market)
+            return None
+
         return actions[user_choice]
 
     def choose_buy_stock(self, stock_market: StockMarket) -> tuple[str, int]:
+        if stock_market is None:
+            print("Stock market not set.")
+            return [None, None]
+
         stock_market.print_market_status(False)
 
         while True:
@@ -126,6 +179,10 @@ class RealPlayer(Player):
             return stock_name, quantity
 
     def choose_sell_stock(self, stock_market: StockMarket) -> tuple[str, int]:
+        if stock_market is None:
+            print("Stock market not set.")
+            return [None, None]
+
         self.check_portfolio(stock_market)
         empty: bool = True
         for key in self.portfolio.keys():
@@ -172,6 +229,10 @@ class RealPlayer(Player):
             return stock_name, quantity
 
     def choose_get_info(self, stock_market: StockMarket) -> Stock:
+        if stock_market is None:
+            print("Stock market not set.")
+            return None
+
         stock_market.print_market_status(False)
         while True:
             stock_name: str = input(
@@ -187,20 +248,34 @@ class RealPlayer(Player):
     def choose_go_investment_amount(self, go_stock: GoldenOpportunityStock) -> float:
         print("Golden Opportunity:")
         print(go_stock)
-        print()
+        if go_stock.current_price is None or go_stock.current_price <= 0:
+            print("Invalid price for Golden Opportunity stock.")
+            return 0.0
         while True:
-            print(f"Your Capital: {self.capital}\n")
-            input_str: str = input("How much would you like to invest?: ")
-            invest_amt: float
-
+            raw_input: str = input("Enter the amount you want to invest (q to quit): ")
             try:
-                invest_amt = float(input_str)
+                amount: float = float(raw_input)
+                if amount > 0 and amount <= self.capital:
+                    return amount
+                print("Amount must be > 0 and <= capital.")
             except ValueError:
-                print("Input must be a number")
-                continue
+                if raw_input == "q":
+                    return 0.0
+                print("Invalid input. Enter a number.")
 
-            if invest_amt < 0 or invest_amt > self.capital:
-                print(f"Input must be in range 0-{self.capital}")
-                continue
+        return 0.0
 
-            return invest_amt
+    def choose_investment_amount(self, investment_amount: int) -> float:
+        while True:
+            raw_input: str = input("Enter the amount you want to invest (q to quit): ")
+            try:
+                amount: float = float(raw_input)
+                if amount > 0 and amount <= investment_amount:
+                    return amount
+                print(f"Amount must be > 0 and <= {investment_amount}.")
+            except ValueError:
+                if raw_input == "q":
+                    return 0.0
+                print("Invalid input. Enter a number.")
+
+        return 0.0

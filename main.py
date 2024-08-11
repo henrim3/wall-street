@@ -3,7 +3,7 @@ from team import Team
 from turn import BuildTurn, GoldenOpportunityTurn, run_turns
 from player.real_player import RealPlayer
 
-NUM_BUILD_TURNS = 5
+NUM_BUILD_TURNS = 10
 NUM_GO_TURNS = 1
 
 if __name__ == "__main__":
