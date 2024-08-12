@@ -1,7 +1,8 @@
 from turn.turn import Turn
 from action import Action
 from action.actions import AllocateToBuyoutFund, BuyStock, CheckPortfolio, \
-    SellStock, EndTurn, CheckBalance, GetStockInfo, GetTransactionHistory
+    SellStock, EndTurn, CheckBalance, GetStockInfo, GetTransactionHistory, \
+    CheckTeamPortfolio
 from team import Team
 from stock_market.stock_market import StockMarket
 
@@ -24,6 +25,7 @@ class BuildTurn(Turn):
                     CheckBalance(player),
                     GetStockInfo(player, self.stock_market),
                     GetTransactionHistory(player, self.stock_market),
+                    CheckTeamPortfolio(team, self.stock_market),
                     EndTurn(),
                 ]
 

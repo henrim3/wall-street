@@ -3,6 +3,7 @@ from stock_market.stock import Stock
 from stock_market.stock_market import StockMarket
 from stock_market.transaction import Transaction
 from player import Player
+from team import Team
 
 # Set CompleteTransactions = True to see other teams transactions as well
 CompleteTransactions = False
@@ -68,6 +69,16 @@ class CheckPortfolio(Action):
 
     def run(self) -> None:
         self.player.check_portfolio(self.stock_market)
+
+
+class CheckTeamPortfolio(Action):
+    def __init__(self, team: Team, stock_market: StockMarket) -> None:
+        self.name: str = "Check Team Portfolio"
+        self.team: Team = team
+        self.stock_market: StockMarket = stock_market
+
+    def run(self) -> None:
+        self.team.check_team_portfolio(self.stock_market)
 
 
 class CheckBalance(Action):
@@ -163,7 +174,6 @@ class SellStock(Action):
         print(f"Sold {quantity} shares of {stock_name}")
 
 
-
 class TeamPortfolio(Action):
     def __init__(self, stock_market: StockMarket) -> None:
         self.name: str = "Team Portfolio"
@@ -177,7 +187,7 @@ class TeamPortfolio(Action):
 
     def run(self) -> None:
         print("Team Portfolio:")
-        team_portfolio: Dict[str, int] = {}
+        team_portfolio: dict[str, int] = {}
 
         # Collect stock data
         for stock_name in self.stock_market.get_all_stocks():
@@ -189,8 +199,6 @@ class TeamPortfolio(Action):
         # Print portfolio
         for stock_name, percentage in team_portfolio.items():
             print(f"{stock_name}: {percentage:.2f}% of the market")
-
-
 
 
 class EndTurn(Action):

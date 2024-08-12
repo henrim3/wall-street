@@ -6,6 +6,7 @@ from stock_market.stock import Stock
 from stock_market.stock_market import StockMarket
 from turn.golden_opportunity_turn import GoldenOpportunityStock
 
+
 class RealPlayer(Player):
     def __init__(self, name: str, initial_capital: int, percentage_stake: int):
         self.name: str = name
@@ -49,15 +50,19 @@ class RealPlayer(Player):
             if not reachedpenny:
                 print(f"{indentstr}Owned Penny Stocks:")
                 reachedpenny = True
-            status = "Owned" if stock_market.get_stock(stock).owned > stock_market.get_stock(stock).needed else ""
-            print(f"{indentstr}{indentstr}{stock}: {self.portfolio[stock]} shares {status}")
+            status = "Owned" if stock_market.get_stock(
+                stock).owned > stock_market.get_stock(stock).needed else ""
+            print(f"{indentstr}{indentstr}{stock}: "
+                  f"{self.portfolio[stock]} shares {status}")
 
         for stock in blue:
             if not reachedblue:
                 print(f"{indentstr}Owned Blue Chip Stocks:")
                 reachedblue = True
-            status = "Owned" if stock_market.get_stock(stock).owned > stock_market.get_stock(stock).needed else ""
-            print(f"{indentstr}{indentstr}{stock}: {self.portfolio[stock]} shares {status}")
+            status = "Owned" if stock_market.get_stock(
+                stock).owned > stock_market.get_stock(stock).needed else ""
+            print(f"{indentstr}{indentstr}{stock}: "
+                  f"{self.portfolio[stock]} shares {status}")
 
         print(f"Total portfolio value: ${total:.2f}")
 
@@ -80,11 +85,14 @@ class RealPlayer(Player):
         for stock_name, quantity in team_portfolio.items():
             stock = stock_market.get_stock(stock_name)
             if stock.owned >= stock.needed:
-                percentage = (quantity / stock_market.total_shares(stock_name)) * 100
+                percentage = (
+                    quantity / stock_market.total_shares(stock_name)) * 100
                 status = "Owned" if stock.owned >= stock.needed else ""
-                print(f"{indentstr}{stock_name}: {quantity} shares ({percentage:.2f}% of market) {status}")
+                print(f"{indentstr}{stock_name}: "
+                      f"{quantity} shares ({percentage:.2f}% of market) {status}")
             else:
-                print(f"[DEBUG] Stock {stock_name} does not meet the needed threshold for display.")
+                print(f"[DEBUG] Stock "
+                      f"{stock_name} does not meet the needed threshold for display.")
 
     def choose_action(self, actions: list[Action], indent: int = 0) -> Action:
         indent_str: str = " " * indent
@@ -92,9 +100,6 @@ class RealPlayer(Player):
 
         for i, action in enumerate(actions):
             prompt += f"\n  {indent_str}{i}: {action.name}"
-
-        if self.team:
-            prompt += f"\n  {indent_str}{len(actions)}: Check Team Portfolio"
 
         num_actions: int = len(actions)
         user_choice: int
@@ -113,13 +118,6 @@ class RealPlayer(Player):
             except ValueError:
                 print(f"\n{indent_str}Error: Input must be a number\n")
                 continue
-
-        if user_choice == num_actions:
-            if self.stock_market is None:
-                print("Stock market not set.")
-                return None
-            self.check_team_portfolio(self.stock_market)
-            return None
 
         return actions[user_choice]
 
@@ -252,7 +250,8 @@ class RealPlayer(Player):
             print("Invalid price for Golden Opportunity stock.")
             return 0.0
         while True:
-            raw_input: str = input("Enter the amount you want to invest (q to quit): ")
+            raw_input: str = input(
+                "Enter the amount you want to invest (q to quit): ")
             try:
                 amount: float = float(raw_input)
                 if amount > 0 and amount <= self.capital:
@@ -267,7 +266,8 @@ class RealPlayer(Player):
 
     def choose_investment_amount(self, investment_amount: int) -> float:
         while True:
-            raw_input: str = input("Enter the amount you want to invest (q to quit): ")
+            raw_input: str = input(
+                "Enter the amount you want to invest (q to quit): ")
             try:
                 amount: float = float(raw_input)
                 if amount > 0 and amount <= investment_amount:
