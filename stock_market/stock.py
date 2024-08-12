@@ -16,8 +16,8 @@ class Stock:
         self.sigma = sigma  # Volatility coefficient
         self.dt = dt        # Time increment
         self.owned = 0
-        self.shares = shares    #shares available 
-        self.needed = shares //2 + shares %2  #shares needed for stock to be under a players management 
+        self.shares = shares    #shares available
+        self.needed = shares //2 + shares %2  #shares needed for stock to be under a players management
         self.stockrep = stockrep      #The proportion of the total market that the stock represents 0.06 -> 6%
         self.is_recession = True  # Default condition
 
@@ -54,6 +54,7 @@ class Stock:
         print(f"Current Shares Owned: {self.owned}")
         print(f"Market Capitalization: {int(self.shares)}")
         print(f"Stock Representation: {round(self.stockrep * 100,2) }%")
+        print(f"Need for Majority Stake: {self.needed} shares")
 
     def set_market_condition(self, condition: str):
         """ Set the market condition.
