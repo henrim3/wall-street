@@ -224,6 +224,8 @@ class RealPlayer(Player):
 
                 break
 
+
+
             return stock_name, quantity
 
     def choose_get_info(self, stock_market: StockMarket) -> Stock:
@@ -246,23 +248,24 @@ class RealPlayer(Player):
     def choose_go_investment_amount(self, go_stock: GoldenOpportunityStock) -> float:
         print("Golden Opportunity:")
         print(go_stock)
-        if go_stock.current_price is None or go_stock.current_price <= 0:
-            print("Invalid price for Golden Opportunity stock.")
-            return 0.0
+        print()
         while True:
-            raw_input: str = input(
-                "Enter the amount you want to invest (q to quit): ")
-            try:
-                amount: float = float(raw_input)
-                if amount > 0 and amount <= self.capital:
-                    return amount
-                print("Amount must be > 0 and <= capital.")
-            except ValueError:
-                if raw_input == "q":
-                    return 0.0
-                print("Invalid input. Enter a number.")
+            print(f"Your Capital: {self.capital}\n")
+            input_str: str = input("How much would you like to invest?: ")
+            invest_amt: float
 
-        return 0.0
+            try:
+                invest_amt = float(input_str)
+            except ValueError:
+                print("Input must be a number")
+                continue
+
+            if invest_amt < 0 or invest_amt > self.capital:
+                print(f"Input must be in range 0-{self.capital}")
+                continue
+
+            return invest_amt
+
 
     def choose_investment_amount(self, investment_amount: int) -> float:
         while True:

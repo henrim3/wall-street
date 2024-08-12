@@ -41,6 +41,9 @@ class BuyStock(Action):
         stock.owned += quantity
         stock.shares -= quantity
         self.stock_market.availableshares -= quantity
+
+        print(f"After buying: {stock_ticker} owned = {stock.owned}, shares left = {stock.shares}")
+
         portfolio: dict = self.player.portfolio
 
         # add stock to portfolio if doesn't already exist
@@ -49,6 +52,13 @@ class BuyStock(Action):
 
         # add stock to portfolio
         portfolio[stock_ticker] += quantity
+
+        # Debugging: Print to verify portfolio update
+        # print(f"{self.player.name}'s portfolio after buying: {portfolio}")
+
+        # Update team portfolio
+        self.player.team.update_team_portfolio(self.stock_market, stock_ticker, quantity)
+
 
         # add transaction to market
         transaction: Transaction = Transaction(
@@ -165,6 +175,9 @@ class SellStock(Action):
         if portfolio[stock_name] == 0:
             del portfolio[stock_name]
 
+        # Update team portfolio
+        self.player.team.update_team_portfolio(self.stock_market, stock_name, -quantity)
+
         # Add transaction to market
         transaction: Transaction = Transaction(
             self.player, stock, quantity, total_sale, False
@@ -195,7 +208,7 @@ class TeamPortfolio(Action):
             if stock.owned > stock.needed:
                 percentage = self.calculate_percentage(stock_name, stock.owned)
                 team_portfolio[stock_name] = percentage
-
+        print(f"Team portfolio aggregated: {team_portfolio}")
         # Print portfolio
         for stock_name, percentage in team_portfolio.items():
             print(f"{stock_name}: {percentage:.2f}% of the market")
