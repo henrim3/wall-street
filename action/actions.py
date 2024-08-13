@@ -12,11 +12,77 @@ AnonymousTransactions = True
 
 
 class AllocateToBuyoutFund(Action):
-    def __init__(self) -> None:
-        self.name: str = "Allocate to Buyout Fund"
+    def __init__(self, player: Player, team_players: list[Player]) -> None:
+        self.name: str = "Buyout Player"
+        self.player: Player = player
+        self.team_players: list[Player] = [p for p in team_players if p != player]
 
     def run(self) -> None:
-        print("running allocate to buyout")
+        # Check if the player's capital is sufficient for a buyout
+        if self.player.capital < 70000:
+            print(f"{self.player.name} does not have enough capital to buy out another player.")
+            return
+
+        # List potential targets for buyout
+        target = self.select_target()
+
+        if not target:
+            print("No valid target selected.")
+            return
+
+        # Perform the buyout
+        self.perform_buyout(target)
+
+    def select_target(self) -> Player:
+        print("Select a player to buy out:")
+        for i, teammate in enumerate(self.team_players, 1):
+            print(f"{i}. {teammate.name}")
+
+        # Input to select the target
+        choice = int(input("Enter the number of the player you want to buy out: ")) - 1
+
+        if 0 <= choice < len(self.team_players):
+            return self.team_players[choice]
+        else:
+            print("Invalid selection.")
+            return None
+
+    def perform_buyout(self, target: Player) -> None:
+        buyout_price = self.calculate_buyout_price()
+
+        # Deduct the buyout price from the player's capital
+        self.player.capital -= buyout_price
+
+        # Transfer assets from the target to the buyer
+        self.transfer_assets(target)
+
+        # Remove all players on the target's team
+        self.remove_team_players(target)
+
+        print(f"{self.player.name} has successfully bought out {target.name} and their team for ${buyout_price:.2f}!")
+
+    def calculate_buyout_price(self) -> int:
+        # Basic buyout price threshold
+        return 70000
+
+    def transfer_assets(self, target: Player) -> None:
+        # Transfer portfolio stocks to the buyer's portfolio
+        for stock_ticker, quantity in target.portfolio.items():
+            if stock_ticker not in self.player.portfolio:
+                self.player.portfolio[stock_ticker] = 0
+            self.player.portfolio[stock_ticker] += quantity
+
+        # Transfer any remaining capital to the buyer
+        self.player.capital += target.capital
+
+        # Clear the target player's assets
+        target.portfolio.clear()
+        target.capital = 0
+
+    def remove_team_players(self, target: Player) -> None:
+        # Logic to remove all players on the target's team
+        pass
+
 
 
 class BuyStock(Action):

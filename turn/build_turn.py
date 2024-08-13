@@ -5,7 +5,7 @@ from action.actions import AllocateToBuyoutFund, BuyStock, CheckPortfolio, \
     CheckTeamPortfolio
 from team import Team
 from stock_market.stock_market import StockMarket
-
+from player import Player  # Make sure you have the Player class imported
 
 class BuildTurn(Turn):
     def __init__(self, teams: list[Team], stock_market: StockMarket) -> None:
@@ -21,13 +21,14 @@ class BuildTurn(Turn):
                     BuyStock(player, self.stock_market),
                     SellStock(player, self.stock_market),
                     CheckPortfolio(player, self.stock_market),
-                    AllocateToBuyoutFund(),
                     CheckBalance(player),
                     GetStockInfo(player, self.stock_market),
                     GetTransactionHistory(player, self.stock_market),
                     CheckTeamPortfolio(team, self.stock_market),
+                    AllocateToBuyoutFund(player, team.players),
                     EndTurn(),
                 ]
+
 
                 while True:
                     self.output(turn_number)
