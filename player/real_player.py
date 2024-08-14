@@ -15,6 +15,7 @@ class RealPlayer(Player):
         self.portfolio: dict[str, int] = {}  # {stock: quantity}
         self.team: Team = None
         self.stock_market: StockMarket = None  # Initialize as None
+        self.is_active: bool = True  # New attribute to track if the player is active
 
     def setTeam(self, team: Team) -> None:
         self.team = team
