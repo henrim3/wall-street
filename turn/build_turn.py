@@ -6,12 +6,14 @@ from action.actions import AllocateToBuyoutFund, BuyStock, CheckPortfolio, \
 from team import Team
 from stock_market.stock_market import StockMarket
 from player import Player  # Make sure you have the Player class imported
+from Datacollector import dataCollector
 
 class BuildTurn(Turn):
-    def __init__(self, teams: list[Team], stock_market: StockMarket) -> None:
+    def __init__(self, teams: list[Team], stock_market: StockMarket, datacollection: dataCollector) -> None:
         self.name: str = "Build Turn"
         self.teams: list[Team] = teams
         self.stock_market: StockMarket = stock_market
+        self.data = datacollection
 
     def run(self, turn_number: int) -> None:
         self.stock_market.fluctuate_market()
@@ -41,6 +43,7 @@ class BuildTurn(Turn):
                     print("\n")
 
                     if action.end_turn is True:
+                        self.data.addData(player, (turn_number, player.getTotalValue(self.stock_market)))
                         break
 
                     if action.one_time is True:
