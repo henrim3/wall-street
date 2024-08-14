@@ -26,6 +26,7 @@ class BuildTurn(Turn):
                     GetTransactionHistory(player, self.stock_market),
                     CheckTeamPortfolio(team, self.stock_market),
                     AllocateToBuyoutFund(player, team.players),
+                    CheckLeaderboard(self.teams, self.stock_market),
                     EndTurn(),
                 ]
 

@@ -109,7 +109,7 @@ class BuyStock(Action):
         stock.shares -= quantity
         self.stock_market.availableshares -= quantity
 
-        print(f"After buying: {stock_ticker} owned = {stock.owned}, shares left = {stock.shares}")
+        print(f"After buying: {stock_ticker} owned = {stock.owned}, shares left = {int(stock.shares)}")
 
         portfolio: dict = self.player.portfolio
 
@@ -290,7 +290,7 @@ class CheckLeaderboard(Action):
         self.teams: list[Team] = teamlist
         self.market = stockmarket
     def run(self) -> None:
-        print("Current statistics:")
+        print("Current market statistics:")
         indentstr: str = " " * 2
         print(f"{indentstr}Volume of the market: {(self.market.availableshares):,} totals shares")
         totalval = 0
@@ -298,12 +298,18 @@ class CheckLeaderboard(Action):
         for stock in self.market.stocks:
             totalval += stock.price * (stock.shares + stock.owned)
             marketval += stock.price * (stock.shares)
-        print(f"{indentstr}Total market value: ${marketval:,.2f}")
+        print(f"{indentstr}Total market value: ${marketval:,.2f}\n")
+        team_percentages = {}
         for team in self.teams:
-            teamval = 0
-            for player in team.players:
-                for stock in player.portfolio.keys():
-                    stockobj: Stock =  self.market.get_stock(stock)
-                    teamval += stockobj.price * player.portfolio[stock]
-            percentage = teamval / totalval
-            print(f"{indentstr}Team {team.name}: ${teamval:,.2f}, {percentage:.3g}% total market value.")
+            # Calculate and print the team's market percentage
+            team.check_team_portfolio(self.market)
+            total_percentage = sum(
+                self.market.get_stock(stock_name).stockrep * 100
+                for stock_name in team.team_portfolio
+            )
+            team_percentages[team.name] = total_percentage
+            print()
+
+        # Determine the winning team
+        winning_team = max(team_percentages, key=team_percentages.get)
+        print(f"\n{winning_team} is in the lead with {team_percentages[winning_team]:.2f}% of the market!")
