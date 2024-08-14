@@ -8,6 +8,7 @@ class Player:
         self.capital: int = initial_capital
         self.percentage_stake: int = percentage_stake
         self.portfolio: dict = {}  # {stock_name: quantity}
+        self.TeamPortfolio: dict = {}
         self.team = None
 
     def setTeam(self, team):
