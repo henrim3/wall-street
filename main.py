@@ -2,6 +2,7 @@ from stock_market.stock_market import StockMarket
 from team import Team
 from turn import BuildTurn, GoldenOpportunityTurn, run_turns
 from player.real_player import RealPlayer
+from Datacollector import dataCollector
 
 NUM_BUILD_TURNS = 10
 NUM_GO_TURNS = 1
@@ -42,6 +43,8 @@ if __name__ == "__main__":
         ]
     )
 
+    data = dataCollector([team1,team2])
+
     teams: list[Team] = [team1, team2]
 
     stock_market = StockMarket()
@@ -51,7 +54,7 @@ if __name__ == "__main__":
     for stock in stock_market.stocks:
         stock.set_market_condition('normal')
 
-    build_turn: BuildTurn = BuildTurn(teams, stock_market)
+    build_turn: BuildTurn = BuildTurn(teams, stock_market, data)
     go_turn: GoldenOpportunityTurn = GoldenOpportunityTurn(teams, stock_market)
 
     turns = [
@@ -63,3 +66,4 @@ if __name__ == "__main__":
 
     # Determine the winner after all turns are completed
     determine_winner(teams, stock_market)
+    data.plotdata()

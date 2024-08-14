@@ -25,6 +25,14 @@ class Player:
 
     def choose_sell_stock(self, stock_market: StockMarket) -> tuple[str, int]:
         raise NotImplementedError()
+    
+    def getTotalValue(self, market: StockMarket) -> float:
+        total = self.capital
+        for stock in self.portfolio.keys():
+            stockobj = market.get_stock(stock)
+            total += stockobj.price * self.portfolio[stock]
+        return total
+
 
 
 def choose_go_investment_amount(self, go_stock) -> float:

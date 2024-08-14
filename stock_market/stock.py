@@ -54,7 +54,7 @@ class Stock:
         print(f"Current Shares Owned: {self.owned}")
         print(f"Market Capitalization: {int(self.shares)}")
         print(f"Stock Representation: {round(self.stockrep * 100,2) }%")
-        print(f"Need for Majority Stake: {self.needed} shares")
+        print(f"Need for Majority Stake: {int(self.needed)} shares")
 
     def set_market_condition(self, condition: str):
         """ Set the market condition.

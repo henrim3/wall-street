@@ -1,4 +1,5 @@
 from action import Action
+from player import Player
 from stock_market.stock import Stock
 from stock_market.stock_market import StockMarket
 from stock_market.transaction import Transaction
@@ -94,7 +95,7 @@ class BuyStock(Action):
     def run(self) -> None:
         stock_ticker, quantity = self.player.choose_buy_stock(
             self.stock_market)
-
+        
         if stock_ticker is None:
             return
 
@@ -108,7 +109,7 @@ class BuyStock(Action):
         stock.shares -= quantity
         self.stock_market.availableshares -= quantity
 
-        print(f"After buying: {stock_ticker} owned = {stock.owned}, shares left = {stock.shares}")
+        print(f"After buying: {stock_ticker} owned = {stock.owned}, shares left = {int(stock.shares)}")
 
         portfolio: dict = self.player.portfolio
 
@@ -126,9 +127,8 @@ class BuyStock(Action):
         self.player.team.update_team_portfolio(self.stock_market, stock_ticker, quantity)
 
 
-        # add transaction to market
-        transaction: Transaction = Transaction(
-            self.player, stock, quantity, total_price, True)
+        #add transaction to market
+        transaction: Transaction = Transaction(self.player, stock, quantity, total_price, True)
         self.stock_market.transactions.append(transaction)
 
         if stock.owned > stock.needed:
@@ -163,10 +163,7 @@ class CheckBalance(Action):
         self.player: Player = player
 
     def run(self) -> None:
-        print(
-            f"{self.player.name}'s Current Balance: "
-            f"${self.player.capital:.2f}"
-        )
+        print(f"{self.player.name}'s Current Balance: ${self.player.capital:.2f}")
 
 
 class GetStockInfo(Action):
@@ -180,7 +177,6 @@ class GetStockInfo(Action):
         if stock is None:
             return
         stock.printinfo()
-
 
 class GetTransactionHistory(Action):
 
@@ -203,8 +199,8 @@ class GetTransactionHistory(Action):
             if not transaction.buying:
                 action = "sold"
             if (transaction.player.team == self.player.team) or CompleteTransactions:
-                print(f"{indentstr}{player} {action} {transaction.quantity} "
-                      f"{share} of {transaction.stock.name} for ${transaction.price:.2f}")
+                print(f"{indentstr}{player} {action} {transaction.quantity} {share} of {transaction.stock.name} for ${transaction.price:.2f}")
+
 
 
 class SellStock(Action):
@@ -287,3 +283,45 @@ class EndTurn(Action):
 
     def run(self) -> None:
         pass
+
+class CheckLeaderboard(Action):
+    def __init__(self, teamlist: list[Team], stockmarket: StockMarket ) -> None:
+        self.name: str = "Check Leaderboard"
+        self.teams: list[Team] = teamlist
+        self.market = stockmarket
+    def run(self) -> None:
+        print("Current market statistics:")
+        indentstr: str = " " * 2
+        print(f"{indentstr}Volume of the market: {(self.market.availableshares):,} totals shares")
+        totalval = 0
+        marketval = 0
+        for stock in self.market.stocks:
+            totalval += stock.price * (stock.shares + stock.owned)
+            marketval += stock.price * (stock.shares)
+        print(f"{indentstr}Total market value: ${marketval:,.2f}\n")
+        team_percentages = {}
+        for team in self.teams:
+            # Calculate and print the team's market percentage
+            team.check_team_portfolio(self.market)
+            total_percentage = sum(
+                self.market.get_stock(stock_name).stockrep * 100
+                for stock_name in team.team_portfolio
+            )
+            team_percentages[team.name] = total_percentage
+            print()
+
+        # Determine the winning team
+        winning_team = max(team_percentages, key=team_percentages.get)
+
+        # check for ties
+        tied_teams = []
+        for team, perc in team_percentages.items():
+            if perc == team_percentages[winning_team]:
+                tied_teams.append(team)
+
+        if len(tied_teams) == 1:
+            print(f"\n{winning_team} is in the lead with {team_percentages[winning_team]:.2f}% of the market!")
+        else:
+            print(f"\n{len(tied_teams)} teams are tied for the lead:")
+            for team in tied_teams:
+                print(" ", team)
