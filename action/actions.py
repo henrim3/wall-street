@@ -312,4 +312,16 @@ class CheckLeaderboard(Action):
 
         # Determine the winning team
         winning_team = max(team_percentages, key=team_percentages.get)
-        print(f"\n{winning_team} is in the lead with {team_percentages[winning_team]:.2f}% of the market!")
+
+        # check for ties
+        tied_teams = []
+        for team, perc in team_percentages.items():
+            if perc == team_percentages[winning_team]:
+                tied_teams.append(team)
+
+        if len(tied_teams) == 1:
+            print(f"\n{winning_team} is in the lead with {team_percentages[winning_team]:.2f}% of the market!")
+        else:
+            print(f"\n{len(tied_teams)} teams are tied for the lead:")
+            for team in tied_teams:
+                print(" ", team)
