@@ -251,7 +251,7 @@ class RealPlayer(Player):
         print(go_stock)
         print()
         while True:
-            print(f"Your Capital: {self.capital}\n")
+            print(f"Your Capital: ${self.capital:,.2f}\n")
             input_str: str = input("How much would you like to invest?: ")
             invest_amt: float
 
