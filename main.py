@@ -18,12 +18,23 @@ def determine_winner(teams: list[Team], stock_market: StockMarket) -> None:
             for stock_name in team.team_portfolio
         )
         team_percentages[team.name] = total_percentage
-        print(f"{team.name} controls {total_percentage:.2f}% of the market.")
+        print(f"{team.name} controls {total_percentage:.2f}% of the market.\n")
 
     # Determine the winning team
-    winning_team = max(team_percentages, key=team_percentages.get)
-    print(f"\nThe winning team is {winning_team} with {team_percentages[winning_team]:.2f}% of the market!")
-
+    winning_teams = [max(team_percentages, key=team_percentages.get)]
+    for team in teams:
+        if team_percentages[winning_teams[0]] == team_percentages[team.name] and winning_teams[0] != team.name:
+            winning_teams.append(team.name)
+    if len(winning_teams) == 1:
+        print(f"\nThe winning team is {winning_teams[0]} with {team_percentages[winning_teams[0]]:.2f}% of the market!\n")
+    else:
+        tiedteams = ""
+        for i in range(len(winning_teams)  - 1):
+            tiedteams += winning_teams[i]
+            tiedteams += ", "
+        tiedteams += "and "
+        tiedteams += winning_teams[-1]
+        print(f"\n{tiedteams} tied with {team_percentages[winning_teams[0]]:.2f}% of the market!\n")
 if __name__ == "__main__":
     team1 = Team(
         "Team 1",
@@ -66,4 +77,4 @@ if __name__ == "__main__":
 
     # Determine the winner after all turns are completed
     determine_winner(teams, stock_market)
-    data.plotdata()
+    data.requestSummary()
